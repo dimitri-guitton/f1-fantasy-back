@@ -7,6 +7,8 @@ import com.dg.f1fantasyback.model.dto.user.UserDetailDto;
 import com.dg.f1fantasyback.model.dto.user.UserUpdateDto;
 import com.dg.f1fantasyback.model.entity.User;
 import com.dg.f1fantasyback.repository.UserRepository;
+import com.dg.f1fantasyback.security.JWTService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,11 +23,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private JWTService jwtService;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder, JWTService jwtService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     private boolean existsByUsername(String username) {
@@ -80,5 +84,11 @@ public class UserService {
         }
 
         userRepository.deleteById(id);
+    }
+
+    public String register(@Valid UserCreateDto userCreateDto) {
+       UserDetailDto user = createUser(userCreateDto);
+
+        return jwtService.generateToken(user);
     }
 }

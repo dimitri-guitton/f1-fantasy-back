@@ -38,6 +38,7 @@ public class SpringSecurityConfig {
     SecurityFilterChain tokenSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .securityMatcher("/api/token")
+                .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authz -> authz.anyRequest().authenticated())
@@ -48,9 +49,23 @@ public class SpringSecurityConfig {
     }
 
     @Bean
+    SecurityFilterChain registerSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .securityMatcher("/api/register")
+                .cors(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authz -> authz.anyRequest().permitAll())
+                .formLogin(AbstractHttpConfigurer::disable);
+
+        return http.build();
+    }
+
+    @Bean
     SecurityFilterChain jwtSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .securityMatcher("/api/**")
+                .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authz -> authz.anyRequest().authenticated())

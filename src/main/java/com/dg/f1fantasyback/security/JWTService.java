@@ -1,5 +1,7 @@
 package com.dg.f1fantasyback.security;
 
+import com.dg.f1fantasyback.model.dto.user.UserDetailDto;
+import com.dg.f1fantasyback.model.entity.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwsHeader;
@@ -20,12 +22,20 @@ public class JWTService {
     }
 
     public String generateToken(Authentication authentication) {
+        return generateToken(authentication.getName());
+    }
+
+    public String generateToken(UserDetailDto user) {
+        return generateToken(user.getUsername());
+    }
+
+    private String generateToken(String subject) {
         Instant now = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
                 .expiresAt(now.plus(1825, ChronoUnit.DAYS)) // 5 years in days
-                .subject(authentication.getName())
+                .subject(subject)
                 .build();
 
         JwtEncoderParameters jwtEncoderParameters = JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims);
