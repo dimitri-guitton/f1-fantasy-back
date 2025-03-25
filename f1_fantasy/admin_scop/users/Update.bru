@@ -1,0 +1,18 @@
+meta {
+  name: Update
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{host}}/users/132bd93a-08a9-411f-be15-e11fad7e4469
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "username": "TEST-230",
+    "enabled": false
+  }
+}

@@ -1,0 +1,17 @@
+meta {
+  name: Delete
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{host}}/users/d7423b13-a247-4bcb-8691-76f82e6ee0a1
+  body: none
+  auth: inherit
+}
+
+body:json {
+  {
+    "enabled": false
+  }
+}

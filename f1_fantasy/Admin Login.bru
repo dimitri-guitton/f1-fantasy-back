@@ -1,0 +1,20 @@
+meta {
+  name: Admin Login
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{host}}/token
+  body: none
+  auth: basic
+}
+
+auth:basic {
+  username: admin
+  password: admin
+}
+
+script:post-response {
+  bru.setVar('admin-token',res.body);
+}

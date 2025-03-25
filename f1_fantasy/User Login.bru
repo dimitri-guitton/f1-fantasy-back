@@ -1,0 +1,20 @@
+meta {
+  name: User Login
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{host}}/token
+  body: none
+  auth: basic
+}
+
+auth:basic {
+  username: user
+  password: user
+}
+
+script:post-response {
+  bru.setVar('user-token',res.body);
+}

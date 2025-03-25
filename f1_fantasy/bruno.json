@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "f1_fantasy",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
