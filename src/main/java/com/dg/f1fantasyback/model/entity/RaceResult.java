@@ -1,13 +1,15 @@
 package com.dg.f1fantasyback.model.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "race_result")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class RaceResult {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

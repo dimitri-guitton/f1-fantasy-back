@@ -2,15 +2,17 @@ package com.dg.f1fantasyback.model.entity;
 
 import com.dg.f1fantasyback.model.enums.RaceTypeEnum;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "race")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class Race {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

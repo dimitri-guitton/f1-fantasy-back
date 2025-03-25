@@ -1,13 +1,15 @@
 package com.dg.f1fantasyback.model.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "fantasy_race_point")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class FantasyRacePoint {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

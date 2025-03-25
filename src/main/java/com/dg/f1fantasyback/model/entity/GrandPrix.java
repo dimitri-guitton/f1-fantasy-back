@@ -1,17 +1,19 @@
 package com.dg.f1fantasyback.model.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "grand_prix")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class GrandPrix {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
