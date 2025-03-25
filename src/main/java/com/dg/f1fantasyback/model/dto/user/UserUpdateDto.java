@@ -15,4 +15,5 @@ import java.io.Serializable;
 public class UserUpdateDto implements Serializable {
     private String username;
     private Boolean enabled;
+    private String password;
 }

@@ -1,7 +1,10 @@
 package com.dg.f1fantasyback.model.entity;
 
+import com.dg.f1fantasyback.model.enums.Role;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -9,10 +12,12 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.util.Date;
 import java.util.UUID;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "app_user")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -28,6 +33,9 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.ROLE_USER;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private Date createdAt;
@@ -36,3 +44,4 @@ public class User {
     @Column(name = "updated_at", nullable = false)
     private Date updatedAt;
 }
+
