@@ -16,5 +16,5 @@ auth:basic {
 }
 
 script:post-response {
-  bru.setVar('admin-token',res.body);
+  bru.setVar('admin-token',res.body.token);
 }

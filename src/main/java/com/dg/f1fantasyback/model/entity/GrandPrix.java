@@ -34,4 +34,14 @@ public class GrandPrix {
     @OneToMany(mappedBy = "grandPrix", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Race> races = new LinkedHashSet<>();
 
+    public void addRace(Race race) {
+        races.add(race);
+        race.setGrandPrix(this);
+    }
+
+    public void removeRace(Race race) {
+        races.remove(race);
+        race.setGrandPrix(null);
+    }
+
 }
