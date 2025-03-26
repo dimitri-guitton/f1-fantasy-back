@@ -1,8 +1,8 @@
 package com.dg.f1fantasyback.controller;
 
-import com.dg.f1fantasyback.model.dto.user.UserDetailDto;
 import com.dg.f1fantasyback.model.dto.user_team.UserTeamCreateDto;
 import com.dg.f1fantasyback.model.dto.user_team.UserTeamDetailDto;
+import com.dg.f1fantasyback.model.dto.user_team.UserTeamDto;
 import com.dg.f1fantasyback.security.AuthService;
 import com.dg.f1fantasyback.service.UserTeamService;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +19,7 @@ public class UserTeamController {
     }
 
     @GetMapping
-    public Iterable<UserTeamDetailDto> getUserTeams() {
+    public Iterable<UserTeamDto> getUserTeams() {
         return userTeamService.getTeams();
     }
 
@@ -30,7 +30,6 @@ public class UserTeamController {
 
     @PostMapping
     public UserTeamDetailDto createUserTeam(@RequestBody UserTeamCreateDto userTeamCreateDto) {
-
         return userTeamService.createTeam(authService.getAuthenticatedUser(), userTeamCreateDto);
     }
 

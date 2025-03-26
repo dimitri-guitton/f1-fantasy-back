@@ -14,7 +14,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TeamDto implements Serializable {
-    private Integer id;
     private String label;
     private String logo;
 }

@@ -15,9 +15,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DriverDto implements Serializable {
-    private Integer id;
     private String firstName;
     private String lastName;
     private String profilePicture;
-    private TeamDto team;
 }

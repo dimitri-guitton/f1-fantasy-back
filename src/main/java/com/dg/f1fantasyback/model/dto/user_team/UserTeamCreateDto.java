@@ -1,6 +1,5 @@
 package com.dg.f1fantasyback.model.dto.user_team;
 
-import com.dg.f1fantasyback.model.dto.driver.DriverDto;
 import com.dg.f1fantasyback.model.entity.UserTeam;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -24,5 +23,8 @@ public class UserTeamCreateDto implements Serializable {
     @NotBlank(message = "Le label de l'équipe est obligatoire")
     @Size(min = 3, max = 50, message = "Le label de l'équipe doit contenir entre 3 et 50 caractères")
     private String label;
-    private Set<DriverDto> drivers = new LinkedHashSet<>();
+
+    private Set<Integer> driverIds = new LinkedHashSet<>();
+
+    private Set<Integer> teamIds = new LinkedHashSet<>();
 }

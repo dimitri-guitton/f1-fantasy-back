@@ -32,6 +32,12 @@ public class UserTeam {
             inverseJoinColumns = @JoinColumn(name = "driver_id"))
     private Set<Driver> drivers = new LinkedHashSet<>();
 
+    @ManyToMany
+    @JoinTable(name = "user_team_teams",
+            joinColumns = @JoinColumn(name = "user_team_id"),
+            inverseJoinColumns = @JoinColumn(name = "teams_id"))
+    private Set<Team> teams = new LinkedHashSet<>();
+
     public void addDriver(Driver driver) {
         drivers.add(driver);
     }
@@ -40,4 +46,11 @@ public class UserTeam {
         drivers.remove(driver);
     }
 
+    public void addTeam(Team team) {
+        teams.add(team);
+    }
+
+    public void removeTeam(Team team) {
+        teams.remove(team);
+    }
 }

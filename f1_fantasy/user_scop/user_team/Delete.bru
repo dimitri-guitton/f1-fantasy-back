@@ -1,0 +1,17 @@
+meta {
+  name: Delete
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{host}}/user-teams/3
+  body: none
+  auth: inherit
+}
+
+body:json {
+  {
+    "label": "Equipe 1 (update)"
+  }
+}
