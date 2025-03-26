@@ -10,6 +10,7 @@ import com.dg.f1fantasyback.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Arrays;
 
@@ -19,11 +20,13 @@ public class F1FantasyBackApplication implements CommandLineRunner {
     private final UserRepository userRepository;
     private final DriverRepository driverRepository;
     private final TeamRepository teamRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public F1FantasyBackApplication(UserRepository userRepository, DriverRepository driverRepository, TeamRepository teamRepository) {
+    public F1FantasyBackApplication(UserRepository userRepository, DriverRepository driverRepository, TeamRepository teamRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.driverRepository = driverRepository;
         this.teamRepository = teamRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public static void main(String[] args) {
@@ -33,10 +36,10 @@ public class F1FantasyBackApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (userRepository.count() == 0) {
-            User user = User.builder().username("admin").password("admin").enabled(true).role(Role.ROLE_ADMIN).build();
+            User user = User.builder().username("my-admin").password(passwordEncoder.encode("admin")).enabled(true).role(Role.ROLE_ADMIN).build();
             userRepository.save(user);
 
-            User user2 = User.builder().username("user").password("user").enabled(true).role(Role.ROLE_USER).build();
+            User user2 = User.builder().username("my-user").password(passwordEncoder.encode("user")).enabled(true).role(Role.ROLE_USER).build();
             userRepository.save(user2);
         }
 

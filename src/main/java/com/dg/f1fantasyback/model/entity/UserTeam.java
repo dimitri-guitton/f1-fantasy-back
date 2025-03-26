@@ -3,6 +3,9 @@ package com.dg.f1fantasyback.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "user_team")
 @Builder
@@ -22,5 +25,19 @@ public class UserTeam {
 
     @Column(name = "label", nullable = false)
     private String label;
+
+    @ManyToMany
+    @JoinTable(name = "user_team_drivers",
+            joinColumns = @JoinColumn(name = "user_team_id"),
+            inverseJoinColumns = @JoinColumn(name = "driver_id"))
+    private Set<Driver> drivers = new LinkedHashSet<>();
+
+    public void addDriver(Driver driver) {
+        drivers.add(driver);
+    }
+
+    public void removeDriver(Driver driver) {
+        drivers.remove(driver);
+    }
 
 }

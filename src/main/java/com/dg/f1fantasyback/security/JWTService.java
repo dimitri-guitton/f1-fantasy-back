@@ -1,13 +1,10 @@
 package com.dg.f1fantasyback.security;
 
 import com.dg.f1fantasyback.model.dto.user.UserDetailDto;
-import com.dg.f1fantasyback.model.entity.User;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
-import org.springframework.security.oauth2.jwt.JwsHeader;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -15,10 +12,15 @@ import java.time.temporal.ChronoUnit;
 
 @Service
 public class JWTService {
-    private final JwtEncoder jwtEncoder;
+    @Value("${JWT_KEY}")
+    private String jwtKey;
 
-    public JWTService(JwtEncoder jwtEncoder) {
+    private final JwtEncoder jwtEncoder;
+    private final JwtDecoder jwtDecoder;
+
+    public JWTService(JwtEncoder jwtEncoder, JwtDecoder jwtDecoder) {
         this.jwtEncoder = jwtEncoder;
+        this.jwtDecoder = jwtDecoder;
     }
 
     public String generateToken(Authentication authentication) {
