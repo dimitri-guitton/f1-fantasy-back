@@ -1,13 +1,14 @@
 package com.dg.f1fantasyback;
 
-import com.dg.f1fantasyback.model.entity.Driver;
-import com.dg.f1fantasyback.model.entity.Team;
-import com.dg.f1fantasyback.model.entity.User;
+import com.dg.f1fantasyback.model.entity.*;
+import com.dg.f1fantasyback.model.enums.RaceTypeEnum;
 import com.dg.f1fantasyback.model.enums.Role;
 import com.dg.f1fantasyback.repository.DriverRepository;
+import com.dg.f1fantasyback.repository.GrandPrixRepository;
 import com.dg.f1fantasyback.repository.TeamRepository;
 import com.dg.f1fantasyback.repository.UserRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -22,8 +23,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @SpringBootApplication
@@ -33,12 +37,14 @@ public class F1FantasyBackApplication implements CommandLineRunner {
     private final DriverRepository driverRepository;
     private final TeamRepository teamRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final GrandPrixRepository grandPrixRepository;
 
-    public F1FantasyBackApplication(UserRepository userRepository, DriverRepository driverRepository, TeamRepository teamRepository, BCryptPasswordEncoder passwordEncoder) {
+    public F1FantasyBackApplication(UserRepository userRepository, DriverRepository driverRepository, TeamRepository teamRepository, BCryptPasswordEncoder passwordEncoder, GrandPrixRepository grandPrixRepository) {
         this.userRepository = userRepository;
         this.driverRepository = driverRepository;
         this.teamRepository = teamRepository;
         this.passwordEncoder = passwordEncoder;
+        this.grandPrixRepository = grandPrixRepository;
     }
 
     public static void main(String[] args) {
@@ -47,6 +53,14 @@ public class F1FantasyBackApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        loadUserFixtures();
+
+        loadTeamFixtures();
+
+        loadGrandPrixFixtures();
+    }
+
+    private void loadUserFixtures() {
         if (userRepository.count() == 0) {
             User user = User.builder().username("my-admin").password(passwordEncoder.encode("admin")).enabled(true).role(Role.ROLE_ADMIN).build();
             userRepository.save(user);
@@ -54,7 +68,9 @@ public class F1FantasyBackApplication implements CommandLineRunner {
             User user2 = User.builder().username("my-user").password(passwordEncoder.encode("user")).enabled(true).role(Role.ROLE_USER).build();
             userRepository.save(user2);
         }
+    }
 
+    private void loadTeamFixtures() throws IOException {
         if (teamRepository.count() == 0) {
             // Read JSON file
             ObjectMapper mapper = new ObjectMapper();
@@ -109,6 +125,46 @@ public class F1FantasyBackApplication implements CommandLineRunner {
                         .collect(Collectors.toList());
 
                 driverRepository.saveAll(drivers);
+            }
+        }
+    }
+
+    private void loadGrandPrixFixtures() throws IOException {
+        if (grandPrixRepository.count() == 0) {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode rootNode = mapper.readTree(new File("python/race_2025.json"));
+            JsonNode racesNode = rootNode.get("races");
+            DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+
+            for (JsonNode raceNode : racesNode) {
+                JsonNode sessions = raceNode.get("sessions");
+                GrandPrix grandPrix = GrandPrix.builder()
+                        .label(raceNode.get("name").asText())
+                        .startAt(LocalDateTime.parse(sessions.get("fp1").asText(), formatter))
+                        .endAt(LocalDateTime.parse(sessions.get("gp").asText(), formatter))
+                        .build();
+
+                System.out.println(sessions.get("qualifying").asText());
+                System.out.println(sessions.get("gp").asText());
+                Race qualifying = Race.builder()
+                        .grandPrix(grandPrix)
+                        .label("Qualifiquation")
+                        .startAt(sessions.has("qualifying") ?
+                                LocalDateTime.parse(sessions.get("qualifying").asText(), formatter) : null)
+                        .type(RaceTypeEnum.QUALIFYING)
+                        .build();
+
+                Race gp = Race.builder()
+                        .grandPrix(grandPrix)
+                        .label("GP")
+                        .startAt(sessions.has("gp") ?
+                                LocalDateTime.parse(sessions.get("gp").asText(), formatter) : null)
+                        .type(RaceTypeEnum.GP)
+                        .build();
+
+                grandPrix.setRaces(Set.of(qualifying, gp));
+
+                grandPrixRepository.save(grandPrix);
             }
         }
     }

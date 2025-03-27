@@ -3,6 +3,7 @@ package com.dg.f1fantasyback.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -25,11 +26,11 @@ public class GrandPrix {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "start_at", nullable = false)
-    private Date startAt;
+    private LocalDateTime startAt;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "end_at", nullable = false)
-    private Date endAt;
+    private LocalDateTime endAt;
 
     @OneToMany(mappedBy = "grandPrix", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Race> races = new LinkedHashSet<>();

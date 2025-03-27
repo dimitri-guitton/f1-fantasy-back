@@ -4,6 +4,7 @@ import com.dg.f1fantasyback.model.enums.RaceTypeEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -28,7 +29,7 @@ public class Race {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "start_at", nullable = false)
-    private Date startAt;
+    private LocalDateTime startAt;
 
     @Enumerated
     @Column(name = "type", nullable = false)
