@@ -1,0 +1,172 @@
+[
+    {
+        "name": "Mercedes",
+        "full_logo": "https://media.formula1.com/image/upload/f_auto,c_limit,q_75,w_1320/content/dam/fom-website/2018-redesign-assets/team logos/mercedes",
+        "short_logo": "https://media.formula1.com/content/dam/fom-website/teams/2025/mercedes-logo.png",
+        "drivers": [
+            {
+                "number": "63",
+                "name": "George Russell",
+                "image": "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/russell"
+            },
+            {
+                "number": "12",
+                "name": "Kimi Antonelli",
+                "image": "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/antonelli"
+            }
+        ]
+    },
+    {
+        "name": "Racing Bulls",
+        "full_logo": "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/fom-website/2018-redesign-assets/team logos/racing bulls",
+        "short_logo": "https://media.formula1.com/content/dam/fom-website/teams/2025/racing-bulls-logo.png",
+        "drivers": [
+            {
+                "number": "6",
+                "name": "Isack Hadjar",
+                "image": "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/hadjar"
+            },
+            {
+                "number": "22",
+                "name": "Yuki Tsunoda",
+                "image": "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/tsunoda"
+            }
+        ]
+    },
+    {
+        "name": "Kick Sauber",
+        "full_logo": "https://media.formula1.com/image/upload/f_auto,c_limit,q_75,w_1320/content/dam/fom-website/2018-redesign-assets/team logos/kick sauber",
+        "short_logo": "https://media.formula1.com/content/dam/fom-website/teams/2025/kick-sauber-logo.png",
+        "drivers": [
+            {
+                "number": "27",
+                "name": "Nico Hulkenberg",
+                "image": "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/hulkenberg"
+            },
+            {
+                "number": "5",
+                "name": "Gabriel Bortoleto",
+                "image": "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/bortoleto"
+            }
+        ]
+    },
+    {
+        "name": "McLaren",
+        "full_logo": "https://media.formula1.com/image/upload/f_auto,c_limit,q_75,w_1320/content/dam/fom-website/2018-redesign-assets/team logos/mclaren",
+        "short_logo": "https://media.formula1.com/content/dam/fom-website/teams/2025/mclaren-logo.png",
+        "drivers": [
+            {
+                "number": "81",
+                "name": "Oscar Piastri",
+                "image": "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/piastri"
+            },
+            {
+                "number": "4",
+                "name": "Lando Norris",
+                "image": "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/norris"
+            }
+        ]
+    },
+    {
+        "name": "Haas",
+        "full_logo": "https://media.formula1.com/image/upload/f_auto,c_limit,q_75,w_1320/content/dam/fom-website/2018-redesign-assets/team logos/haas",
+        "short_logo": "https://media.formula1.com/content/dam/fom-website/teams/2025/haas-logo.png",
+        "drivers": [
+            {
+                "number": "31",
+                "name": "Esteban Ocon",
+                "image": "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/ocon"
+            },
+            {
+                "number": "87",
+                "name": "Oliver Bearman",
+                "image": "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/bearman"
+            }
+        ]
+    },
+    {
+        "name": "Aston Martin",
+        "full_logo": "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/2018-redesign-assets/team logos/aston martin",
+        "short_logo": "https://media.formula1.com/content/dam/fom-website/teams/2025/aston-martin-logo.png",
+        "drivers": [
+            {
+                "number": "18",
+                "name": "Lance Stroll",
+                "image": "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/stroll"
+            },
+            {
+                "number": "14",
+                "name": "Fernando Alonso",
+                "image": "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/alonso"
+            }
+        ]
+    },
+    {
+        "name": "Williams",
+        "full_logo": "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/2018-redesign-assets/team logos/williams",
+        "short_logo": "https://media.formula1.com/content/dam/fom-website/teams/2025/williams-logo.png",
+        "drivers": [
+            {
+                "number": "23",
+                "name": "Alexander Albon",
+                "image": "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/albon"
+            },
+            {
+                "number": "55",
+                "name": "Carlos Sainz",
+                "image": "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/sainz"
+            }
+        ]
+    },
+    {
+        "name": "Ferrari",
+        "full_logo": "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/2018-redesign-assets/team logos/ferrari",
+        "short_logo": "https://media.formula1.com/content/dam/fom-website/teams/2025/ferrari-logo.png",
+        "drivers": [
+            {
+                "number": "16",
+                "name": "Charles Leclerc",
+                "image": "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/leclerc"
+            },
+            {
+                "number": "44",
+                "name": "Lewis Hamilton",
+                "image": "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/hamilton"
+            }
+        ]
+    },
+    {
+        "name": "Red Bull Racing",
+        "full_logo": "https://media.formula1.com/image/upload/f_auto,c_limit,q_75,w_1320/content/dam/fom-website/2018-redesign-assets/team logos/red bull",
+        "short_logo": "https://media.formula1.com/content/dam/fom-website/teams/2025/red-bull-racing-logo.png",
+        "drivers": [
+            {
+                "number": "1",
+                "name": "Max Verstappen",
+                "image": "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/verstappen"
+            },
+            {
+                "number": "30",
+                "name": "Liam Lawson",
+                "image": "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/lawson"
+            }
+        ]
+    },
+    {
+        "name": "Alpine",
+        "full_logo": "https://media.formula1.com/image/upload/f_auto,c_limit,q_75,w_1320/content/dam/fom-website/2018-redesign-assets/team logos/alpine",
+        "short_logo": "https://media.formula1.com/content/dam/fom-website/teams/2025/alpine-logo.png",
+        "drivers": [
+            {
+                "number": "10",
+                "name": "Pierre Gasly",
+                "image": "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/gasly"
+            },
+            {
+                "number": "7",
+                "name": "Jack Doohan",
+                "image": "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/doohan"
+            }
+        ]
+    }
+]
