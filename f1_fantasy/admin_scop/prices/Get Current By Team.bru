@@ -1,0 +1,15 @@
+meta {
+  name: Get Current By Team
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{host}}/prices/teams/100/current
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzZWxmIiwic3ViIjoibG9raSIsImV4cCI6MTkwMDU4MjQ4NSwiaWF0IjoxNzQyOTAyNDg1fQ.rikIqp-ulSWKjaqvYrHbOv-27nsWXKzeo5pacCiZ0CI
+}

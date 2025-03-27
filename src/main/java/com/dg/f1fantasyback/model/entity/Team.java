@@ -28,6 +28,9 @@ public class Team {
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Driver> drivers = new LinkedHashSet<>();
 
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Price> prices = new LinkedHashSet<>();
+
     public void addDriver(Driver driver) {
         drivers.add(driver);
         driver.setTeam(this);

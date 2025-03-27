@@ -3,6 +3,9 @@ package com.dg.f1fantasyback.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "driver")
 @Builder
@@ -28,4 +31,8 @@ public class Driver {
     @ManyToOne(optional = false)
     @JoinColumn(name = "team_id", nullable = false)
     private Team team;
+
+    @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Price> prices = new LinkedHashSet<>();
+
 }
