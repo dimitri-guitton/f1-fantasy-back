@@ -7,12 +7,24 @@ import com.dg.f1fantasyback.model.enums.Role;
 import com.dg.f1fantasyback.repository.DriverRepository;
 import com.dg.f1fantasyback.repository.TeamRepository;
 import com.dg.f1fantasyback.repository.UserRepository;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.Arrays;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @SpringBootApplication
 public class F1FantasyBackApplication implements CommandLineRunner {
@@ -44,85 +56,78 @@ public class F1FantasyBackApplication implements CommandLineRunner {
         }
 
         if (teamRepository.count() == 0) {
-            // Mercedes
-            Team mercedes = Team.builder().label("Mercedes").build();
-            teamRepository.save(mercedes);
+            // Read JSON file
+            ObjectMapper mapper = new ObjectMapper();
+            List<Map<String, Object>> teams = mapper.readValue(
+                    new File("python/f1_teams_drivers.json"),
+                    new TypeReference<>() {
+                    }
+            );
 
-            Driver russell = Driver.builder().firstName("George").lastName("Russell").profilePicture("empty").team(mercedes).build();
-            Driver antonelli = Driver.builder().firstName("Kimi").lastName("Antonelli").profilePicture("empty").team(mercedes).build();
-            driverRepository.saveAll(Arrays.asList(russell, antonelli));
+            // Process each team
+            for (Map<String, Object> teamData : teams) {
+                // Download team logo
+                String shortLogo = (String) teamData.get("short_logo");
+                String logoFileName = shortLogo.substring(shortLogo.lastIndexOf("/") + 1);
+                downloadImage(shortLogo, logoFileName);
 
-            // McLaren
-            Team mclaren = Team.builder().label("McLaren").build();
-            teamRepository.save(mclaren);
+                String fullLogo = (String) teamData.get("full_logo");
+                fullLogo = fullLogo.replace("team logos", "team%20logos");
 
-            Driver norris = Driver.builder().firstName("Lando").lastName("Norris").profilePicture("empty").team(mclaren).build();
-            Driver piastri = Driver.builder().firstName("Oscar").lastName("Piastri").profilePicture("empty").team(mclaren).build();
-            driverRepository.saveAll(Arrays.asList(norris, piastri));
+                String teamName = fullLogo.substring(fullLogo.lastIndexOf("/") + 1);
+                String fullLogoFileName = teamName.replace(" ", "-") + ".avif";
+                String encodedTeamName = teamName.replace(" ", "%20");
+                fullLogo = fullLogo.replace(teamName, encodedTeamName);
 
-            // Ferrari
-            Team ferrari = Team.builder().label("Ferrari").build();
-            teamRepository.save(ferrari);
+                downloadImage(fullLogo, fullLogoFileName);
 
-            Driver leclerc = Driver.builder().firstName("Charles").lastName("Leclerc").profilePicture("empty").team(ferrari).build();
-            Driver hamilton = Driver.builder().firstName("Lewis").lastName("Hamilton").profilePicture("empty").team(ferrari).build();
-            driverRepository.saveAll(Arrays.asList(leclerc, hamilton));
+                Team team = Team.builder()
+                        .label((String) teamData.get("name"))
+                        .logo(logoFileName)
+                        .fullLogo(fullLogoFileName)
+                        .build();
+                teamRepository.save(team);
 
-            // Red Bull Racing
-            Team redbull = Team.builder().label("Red Bull Racing").build();
-            teamRepository.save(redbull);
+                @SuppressWarnings("unchecked")
+                List<Map<String, Object>> driversData = (List<Map<String, Object>>) teamData.get("drivers");
+                List<Driver> drivers = driversData.stream()
+                        .map(driverData -> {
+                            String[] nameParts = ((String) driverData.get("name")).split(" ");
+                            String imageUrl = (String) driverData.get("image");
+                            String imageFileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1) + ".avif";
 
-            Driver verstappen = Driver.builder().firstName("Max").lastName("Verstappen").profilePicture("empty").team(redbull).build();
-            Driver lawson = Driver.builder().firstName("Liam").lastName("Lawson").profilePicture("empty").team(redbull).build();
-            driverRepository.saveAll(Arrays.asList(verstappen, lawson));
+                            // Download driver image
+                            downloadImage(imageUrl, imageFileName);
 
-            // Williams
-            Team williams = Team.builder().label("Williams").build();
-            teamRepository.save(williams);
+                            return Driver.builder()
+                                    .firstName(nameParts[0])
+                                    .lastName(nameParts[1])
+                                    .profilePicture(imageFileName)
+                                    .team(team)
+                                    .build();
+                        })
+                        .collect(Collectors.toList());
 
-            Driver albon = Driver.builder().firstName("Alexander").lastName("Albon").profilePicture("empty").team(williams).build();
-            Driver sainz = Driver.builder().firstName("Carlos").lastName("Sainz").profilePicture("empty").team(williams).build();
-            driverRepository.saveAll(Arrays.asList(albon, sainz));
+                driverRepository.saveAll(drivers);
+            }
+        }
+    }
 
-            // Haas
-            Team haas = Team.builder().label("Haas").build();
-            teamRepository.save(haas);
+    // Add this method to download images
+    private void downloadImage(String imageUrl, String fileName) {
+        try {
+            Path uploadPath = Paths.get("uploads");
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
 
-            Driver ocon = Driver.builder().firstName("Esteban").lastName("Ocon").profilePicture("empty").team(haas).build();
-            Driver bearman = Driver.builder().firstName("Oliver").lastName("Bearman").profilePicture("empty").team(haas).build();
-            driverRepository.saveAll(Arrays.asList(ocon, bearman));
-
-            // Aston Martin
-            Team astonMartin = Team.builder().label("Aston Martin").build();
-            teamRepository.save(astonMartin);
-
-            Driver stroll = Driver.builder().firstName("Lance").lastName("Stroll").profilePicture("empty").team(astonMartin).build();
-            Driver alonso = Driver.builder().firstName("Fernando").lastName("Alonso").profilePicture("empty").team(astonMartin).build();
-            driverRepository.saveAll(Arrays.asList(stroll, alonso));
-
-            // Kick Sauber
-            Team sauber = Team.builder().label("Kick Sauber").build();
-            teamRepository.save(sauber);
-
-            Driver hulkenberg = Driver.builder().firstName("Nico").lastName("Hulkenberg").profilePicture("empty").team(sauber).build();
-            Driver bortoleto = Driver.builder().firstName("Gabriel").lastName("Bortoleto").profilePicture("empty").team(sauber).build();
-            driverRepository.saveAll(Arrays.asList(hulkenberg, bortoleto));
-
-            // Racing Bulls
-            Team racingBulls = Team.builder().label("Racing Bulls").build();
-            teamRepository.save(racingBulls);
-
-            Driver hadjar = Driver.builder().firstName("Isack").lastName("Hadjar").profilePicture("empty").team(racingBulls).build();
-            Driver tsunoda = Driver.builder().firstName("Yuki").lastName("Tsunoda").profilePicture("empty").team(racingBulls).build();
-            driverRepository.saveAll(Arrays.asList(hadjar, tsunoda));
-
-            // Alpine
-            Team alpine = Team.builder().label("Alpine").build();
-            teamRepository.save(alpine);
-
-            Driver gasly = Driver.builder().firstName("Pierre").lastName("Gasly").profilePicture("empty").team(alpine).build();
-            Driver doohan = Driver.builder().firstName("Jack").lastName("Doohan").profilePicture("empty").team(alpine).build();
-            driverRepository.saveAll(Arrays.asList(gasly, doohan));
+            try (InputStream in = new URL(imageUrl).openStream()) {
+                Path filePath = uploadPath.resolve(fileName);
+                Files.copy(in, filePath, StandardCopyOption.REPLACE_EXISTING);
+            }
+        } catch (IOException e) {
+            System.err.println("Error downloading image: " + imageUrl);
+            e.printStackTrace();
         }
     }
 }

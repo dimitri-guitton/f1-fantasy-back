@@ -37,4 +37,8 @@ public class Team {
         drivers.remove(driver);
         driver.setTeam(null);
     }
+
+    @Column(name = "full_logo")
+    private String fullLogo;
+
 }

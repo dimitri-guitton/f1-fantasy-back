@@ -31,6 +31,11 @@ public class FileStorageService {
         return fileName; // Retourne le nom du fichier sauvegardé
     }
 
+    public void removeFile(String fileName) throws IOException {
+        Path filePath = Paths.get(uploadDir).resolve(fileName);
+        Files.delete(filePath);
+    }
+
     public byte[] loadFileAsBytes(String fileName) throws IOException {
         Path filePath = Paths.get(uploadDir).resolve(fileName);
         return Files.readAllBytes(filePath);
