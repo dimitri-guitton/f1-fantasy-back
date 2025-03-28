@@ -5,10 +5,13 @@ import com.dg.f1fantasyback.model.entity.Race;
 import com.dg.f1fantasyback.model.entity.RaceResult;
 import com.dg.f1fantasyback.model.enums.RaceTypeEnum;
 import com.dg.f1fantasyback.repository.FantasyRacePointRepository;
+import com.dg.f1fantasyback.repository.RaceRepository;
+import com.dg.f1fantasyback.repository.RaceResultRepository;
 import com.dg.f1fantasyback.service.RaceResultService;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -16,13 +19,21 @@ public class RaceCalculator {
 
     private final RaceResultService raceResultService;
     private final FantasyRacePointRepository fantasyRacePointRepository;
+    private final RaceResultRepository raceResultRepository;
+    private final RaceRepository raceRepository;
 
-    public RaceCalculator(RaceResultService raceResultService, FantasyRacePointRepository fantasyRacePointRepository) {
+    public RaceCalculator(RaceResultService raceResultService, FantasyRacePointRepository fantasyRacePointRepository, RaceResultRepository raceResultRepository, RaceRepository raceRepository) {
         this.raceResultService = raceResultService;
         this.fantasyRacePointRepository = fantasyRacePointRepository;
+        this.raceResultRepository = raceResultRepository;
+        this.raceRepository = raceRepository;
     }
 
     public void calculateRacePoints(Race race) {
+        if (race.getIsCalculated()) {
+            throw new RuntimeException("This race has already been calculated");
+        }
+
         Iterable<RaceResult> results = raceResultService.getResultForRace(race.getId());
 
         BaseRacePointCalculator calculator;
@@ -56,5 +67,11 @@ public class RaceCalculator {
 
         fantasyRacePointRepository.saveAll(userPoints.values());
         fantasyRacePointRepository.saveAll(teamPoints.values());
+    }
+
+    public void calculateUncalculedRace() {
+        List<Race> races = raceRepository.findAllByIsCalculated(false);
+
+        races.forEach(this::calculateRacePoints);
     }
 }

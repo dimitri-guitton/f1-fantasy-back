@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/fantasy-points")
 public class FantasyPointController {
@@ -33,5 +36,15 @@ public class FantasyPointController {
     @GetMapping("{driverId}/driver")
     public Integer getDriverPoints(@PathVariable Integer driverId) {
         return fantasyRacePointService.getDriverPoints(driverId);
+    }
+
+    @GetMapping("teams/leaderboard")
+    public List<Map<String, String>> getTeamLeaderboard() {
+        return fantasyRacePointService.getTeamLeaderboard();
+    }
+
+    @GetMapping("drivers/leaderboard")
+    public List<Map<String, String>> getDriverLeaderboard() {
+        return fantasyRacePointService.getDriverLeaderboard();
     }
 }

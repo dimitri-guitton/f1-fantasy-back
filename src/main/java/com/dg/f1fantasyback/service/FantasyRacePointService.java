@@ -4,8 +4,7 @@ import com.dg.f1fantasyback.model.entity.FantasyRacePoint;
 import com.dg.f1fantasyback.repository.FantasyRacePointRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class FantasyRacePointService {
@@ -56,5 +55,33 @@ public class FantasyRacePointService {
 
         return totalPoints;
 
+    }
+
+    public List<Map<String, String>> getTeamLeaderboard() {
+        List<Object[]> result = fantasyRacePointRepository.findTeamLeaderboard();
+        List<Map<String, String>> leaderboard = new ArrayList<>();
+
+        for (Object[] row : result) {
+            Map<String, String> map = new HashMap<>();
+            map.put("team_id", String.valueOf(row[0]));
+            map.put("name", String.valueOf(row[1]));
+            map.put("point", String.valueOf(row[2]));
+            leaderboard.add(map);
+        }
+        return leaderboard;
+    }
+
+    public List<Map<String, String>> getDriverLeaderboard() {
+        List<Object[]> result = fantasyRacePointRepository.findDriverLeaderboard();
+        List<Map<String, String>> leaderboard = new ArrayList<>();
+
+        for (Object[] row : result) {
+            Map<String, String> map = new HashMap<>();
+            map.put("drvier_id", String.valueOf(row[0]));
+            map.put("name", String.valueOf(row[1]));
+            map.put("point", String.valueOf(row[2]));
+            leaderboard.add(map);
+        }
+        return leaderboard;
     }
 }

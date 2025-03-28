@@ -3,9 +3,9 @@ package com.dg.f1fantasyback.model.entity;
 import com.dg.f1fantasyback.model.enums.RaceTypeEnum;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name = "race")
@@ -35,4 +35,7 @@ public class Race {
     @Column(name = "type", nullable = false)
     private RaceTypeEnum type;
 
+    @Column(name = "is_calculated", nullable = false)
+    @ColumnDefault("false")
+    private Boolean isCalculated = false;
 }

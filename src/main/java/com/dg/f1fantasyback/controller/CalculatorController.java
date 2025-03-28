@@ -19,6 +19,11 @@ public class CalculatorController {
         this.raceRepository = raceRepository;
     }
 
+    @GetMapping("/calculate-all")
+    public void calculateRacePoints() {
+        raceCalculator.calculateUncalculedRace();
+    }
+
     @GetMapping("/{id}/race/calculate")
     public void calculateRacePoints(@PathVariable Integer id) {
         Race race = raceRepository.findById(id).orElseThrow(() -> new RuntimeException("Invalid Race ID"));

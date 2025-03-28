@@ -152,6 +152,7 @@ public class FixturesService {
                     .startAt(sessions.has("qualifying") ?
                             LocalDateTime.parse(sessions.get("qualifying").asText(), formatter) : null)
                     .type(RaceTypeEnum.QUALIFYING)
+                    .isCalculated(false)
                     .build();
 
             Race gp = Race.builder()
@@ -160,6 +161,7 @@ public class FixturesService {
                     .startAt(sessions.has("gp") ?
                             LocalDateTime.parse(sessions.get("gp").asText(), formatter) : null)
                     .type(RaceTypeEnum.GP)
+                    .isCalculated(false)
                     .build();
 
             grandPrix.setRaces(Set.of(qualifying, gp));
