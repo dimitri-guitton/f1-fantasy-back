@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class RaceCalculator {
@@ -22,7 +24,10 @@ public class RaceCalculator {
     private final RaceResultRepository raceResultRepository;
     private final RaceRepository raceRepository;
 
-    public RaceCalculator(RaceResultService raceResultService, FantasyRacePointRepository fantasyRacePointRepository, RaceResultRepository raceResultRepository, RaceRepository raceRepository) {
+    public RaceCalculator(RaceResultService raceResultService,
+                          FantasyRacePointRepository fantasyRacePointRepository,
+                          RaceResultRepository raceResultRepository,
+                          RaceRepository raceRepository) {
         this.raceResultService = raceResultService;
         this.fantasyRacePointRepository = fantasyRacePointRepository;
         this.raceResultRepository = raceResultRepository;
@@ -34,23 +39,55 @@ public class RaceCalculator {
             throw new RuntimeException("This race has already been calculated");
         }
 
-        Iterable<RaceResult> results = raceResultService.getResultForRace(race.getId());
-
-        BaseRacePointCalculator calculator;
-
-        if (race.getType() == RaceTypeEnum.GP) {
-            calculator = new GpPointCalculator();
-        } else if (race.getType() == RaceTypeEnum.QUALIFYING) {
-            calculator = new QualifyingPointCalculator();
-        } else {
+        if (race.getType() != RaceTypeEnum.GP && race.getType() != RaceTypeEnum.QUALIFYING) {
             throw new RuntimeException("This race type is not supported");
         }
+
+        Optional<Race> qualifyingRace;
+        Map<Integer, Integer> qualifyingResults;
+        if (race.getType() == RaceTypeEnum.GP) {
+            qualifyingRace = raceRepository.findByTypeAndGrandPrix_Id(RaceTypeEnum.QUALIFYING, race.getGrandPrix()
+                                                                                                   .getId());
+
+            if (qualifyingRace.isEmpty() || !qualifyingRace.get().getIsCalculated()) {
+                throw new RuntimeException("The race need to calculate qualifying race before");
+            }
+
+            List<Object[]> positions = raceResultRepository.getPositionsByDriver(qualifyingRace.get().getId());
+            qualifyingResults = positions.stream()
+                                         .collect(Collectors.toMap(
+                                                 item -> (Integer) item[0],
+                                                 item -> (Integer) item[1],
+                                                 (existing, replacement) -> existing,
+                                                 HashMap::new
+                                                                  ));
+        } else {
+            qualifyingResults = new HashMap<>();
+        }
+
+        Iterable<RaceResult> results = raceResultService.getResultForRace(race.getId());
+
+        GpPointCalculator gpPointCalculator = new GpPointCalculator();
+        QualifyingPointCalculator qualifyingPointCalculator = new QualifyingPointCalculator();
 
         Map<Integer, FantasyRacePoint> userPoints = new HashMap<>();
         Map<Integer, FantasyRacePoint> teamPoints = new HashMap<>();
 
         results.forEach(result -> {
-            Integer point = calculator.calculatePoints(result.getPosition(), result.getDnf());
+            Integer point = 0;
+            if (race.getType() == RaceTypeEnum.GP) {
+                Integer starPosition = qualifyingResults.getOrDefault(result.getDriver().getId(), 0);
+
+                point = gpPointCalculator.calculatePoints(starPosition,
+                                                          result.getPosition(),
+                                                          result.getNbOvertakes(),
+                                                          result.getDnf(),
+                                                          result.getFastestLap(),
+                                                          result.getDriverOfTheDay());
+            } else if (race.getType() == RaceTypeEnum.QUALIFYING) {
+                point = qualifyingPointCalculator.calculatePoints(result.getPosition(), result.getDnf());
+            }
+
             FantasyRacePoint userPoint = userPoints.getOrDefault(result.getDriver().getId(), new FantasyRacePoint());
             userPoint.setPoint(point);
             userPoint.setRace(race);
@@ -67,10 +104,13 @@ public class RaceCalculator {
 
         fantasyRacePointRepository.saveAll(userPoints.values());
         fantasyRacePointRepository.saveAll(teamPoints.values());
+
+        race.setIsCalculated(true);
+        raceRepository.save(race);
     }
 
     public void calculateUncalculedRace() {
-        List<Race> races = raceRepository.findAllByIsCalculated(false);
+        List<Race> races = raceRepository.findAllByIsCalculatedOrderByTypeAsc(false);
 
         races.forEach(this::calculateRacePoints);
     }

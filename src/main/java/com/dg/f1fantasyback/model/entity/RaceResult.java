@@ -2,6 +2,7 @@ package com.dg.f1fantasyback.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "race_result")
@@ -29,5 +30,17 @@ public class RaceResult {
 
     @Column(name = "dnf", nullable = false)
     private Boolean dnf = false;
+
+    @Column(name = "fastest_lap", nullable = false)
+    @ColumnDefault("false")
+    private Boolean fastestLap = false;
+
+    @Column(name = "driver_of_the_day", nullable = false)
+    @ColumnDefault("false")
+    private Boolean driverOfTheDay;
+
+    @Column(name = "nb_overtakes", nullable = false)
+    @ColumnDefault("0")
+    private Integer nbOvertakes;
 
 }
