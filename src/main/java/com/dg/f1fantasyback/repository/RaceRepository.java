@@ -20,4 +20,5 @@ public interface RaceRepository extends JpaRepository<Race, Integer> {
     void updateIsCalculatedBy(@NonNull Boolean isCalculated);
 
     List<Race> findAllByIsCalculatedOrderByTypeAsc(Boolean isCalculated);
+    List<Race> findAllByOrderByTypeAscIdAsc();
 }

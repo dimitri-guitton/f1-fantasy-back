@@ -77,16 +77,16 @@ public class RaceCalculator {
         results.forEach(result -> {
             Integer point = 0;
             if (race.getType() == RaceTypeEnum.GP) {
-                Integer starPosition = qualifyingResults.getOrDefault(result.getDriver().getId(), 0);
+                Integer startPosition = qualifyingResults.getOrDefault(result.getDriver().getId(), 0);
 
-                point = gpPointCalculator.calculatePoints(starPosition,
-                                                          result.getPosition(),
+                point = gpPointCalculator.calculatePoints(startPosition,
+                                                          result.getEndPosition(),
                                                           result.getNbOvertakes(),
                                                           result.getDnf(),
                                                           result.getFastestLap(),
                                                           result.getDriverOfTheDay());
             } else if (race.getType() == RaceTypeEnum.QUALIFYING) {
-                point = qualifyingPointCalculator.calculatePoints(result.getPosition(), result.getDnf());
+                point = qualifyingPointCalculator.calculatePoints(result.getEndPosition(), result.getDnf());
             }
 
             FantasyRacePoint userPoint = userPoints.getOrDefault(result.getDriver().getId(), new FantasyRacePoint());

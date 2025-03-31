@@ -1,5 +1,6 @@
 package com.dg.f1fantasyback.service;
 
+import com.dg.f1fantasyback.exception.PointCalculatorException;
 import com.dg.f1fantasyback.model.entity.*;
 import com.dg.f1fantasyback.model.enums.RaceTypeEnum;
 import com.dg.f1fantasyback.model.enums.Role;
@@ -7,7 +8,6 @@ import com.dg.f1fantasyback.repository.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -131,7 +131,7 @@ public class FixturesService {
             List<Map<String, Object>> driversData = (List<Map<String, Object>>) teamData.get("drivers");
             List<Driver> drivers = driversData.stream()
                                               .map(driverData -> {
-                                                  String[] nameParts = ( (String) driverData.get("name") ).split(" ");
+                                                  String[] nameParts = ((String) driverData.get("name")).split(" ");
                                                   String imageUrl = (String) driverData.get("image");
                                                   String imageFileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1) + ".avif";
 
@@ -139,8 +139,8 @@ public class FixturesService {
                                                   downloadImage(imageUrl, imageFileName);
 
                                                   return Driver.builder()
-                                                               .firstName(nameParts[ 0 ])
-                                                               .lastName(nameParts[ 1 ])
+                                                               .firstName(nameParts[0])
+                                                               .lastName(nameParts[1])
                                                                .profilePicture(imageFileName)
                                                                .team(team)
                                                                .build();
@@ -203,10 +203,11 @@ public class FixturesService {
             return;
         }
 
-        List<Race> races = raceRepository.findAll(Sort.by(Sort.Direction.ASC, "startAt"));
+        List<Race> races = raceRepository.findAllByOrderByTypeAscIdAsc();
         List<Driver> drivers = driverRepository.findAll();
 
         List<RaceResult> raceResults = new ArrayList<>();
+        Map<String, Integer> qualifyingPos = new HashMap<>();
         races.forEach(race -> {
             Collections.shuffle(drivers);
             AtomicInteger position = new AtomicInteger(0);
@@ -214,7 +215,20 @@ public class FixturesService {
 
             AtomicBoolean driverOfTheDay = new AtomicBoolean(false);
             AtomicBoolean isFastestLap = new AtomicBoolean(false);
+
+
             drivers.forEach(driver -> {
+                String key = race.getGrandPrix().getId().toString() + '_' + driver.getId().toString();
+                Integer startPosition = null;
+
+                if (race.getType() == RaceTypeEnum.GP) {
+                    startPosition = qualifyingPos.getOrDefault(key, null);
+
+                    if (startPosition == null) {
+                        throw new PointCalculatorException("The race (" + race.getId() + ") need qualifying result for driver (" + driver.getId() + ")");
+                    }
+                }
+
                 if (position.get() > 15 && !dnf.get()) {
                     dnf.set(new Random().nextInt(5) == 0);  // 20% chance of DNF
                 }
@@ -237,7 +251,8 @@ public class FixturesService {
                 RaceResult raceResult = RaceResult.builder()
                                                   .driver(driver)
                                                   .race(race)
-                                                  .position(position.getAndIncrement())
+                                                  .startPosition(startPosition)
+                                                  .endPosition(position.getAndIncrement())
                                                   .dnf(dnf.get())
                                                   .driverOfTheDay(driverOfTheDay.get())
                                                   .fastestLap(isFastestLap.get())
@@ -245,6 +260,10 @@ public class FixturesService {
                                                   .build()
                         ;
                 raceResults.add(raceResult);
+
+                if (race.getType() == RaceTypeEnum.QUALIFYING) {
+                    qualifyingPos.put(key, position.get());
+                }
             });
         });
 

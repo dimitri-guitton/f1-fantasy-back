@@ -25,8 +25,11 @@ public class RaceResult {
     @JoinColumn(name = "race_id", nullable = false)
     private Race race;
 
-    @Column(name = "position", nullable = false)
-    private Integer position;
+    @Column(name = "start_position")
+    private Integer startPosition;
+
+    @Column(name = "end_position", nullable = false)
+    private Integer endPosition;
 
     @Column(name = "dnf", nullable = false)
     private Boolean dnf = false;
@@ -42,5 +45,6 @@ public class RaceResult {
     @Column(name = "nb_overtakes", nullable = false)
     @ColumnDefault("0")
     private Integer nbOvertakes;
+
 
 }
