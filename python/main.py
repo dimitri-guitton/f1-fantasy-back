@@ -10,7 +10,7 @@ short_logos = []
 
 def get_teams():
     """Récupère les URLs de détail de chaque équipe depuis la page principale."""
-    teams_url = f"{BASE_URL}/en/teams"
+    teams_url = f"{BASE_URL}/en/constructors"
     response = requests.get(teams_url)
     if response.status_code != 200:
         print(f"Erreur lors de la récupération de la page des équipes: {response.status_code}")
@@ -18,11 +18,11 @@ def get_teams():
     soup = BeautifulSoup(response.content, "lxml")
 
     team_links = set()
-    # Ici, on parcourt tous les liens qui contiennent '/en/teams/'
+    # Ici, on parcourt tous les liens qui contiennent '/en/constructors/'
     for a in soup.find_all("a", href = True):
         href = a["href"]
         # On vérifie que le lien correspond à une page d'équipe (et pas à une sous-section)
-        if href.startswith("/en/teams/") and len(href.split("/")) == 4:
+        if href.startswith("/en/constructors/") and len(href.split("/")) == 4:
             # Récupération du logo de l'équipe
             img_tag = a.find("img")
             team_logo = img_tag.get("src") if img_tag else None
@@ -82,13 +82,13 @@ def scrape_team_details(team_url):
 
 
 def main():
-    teams = get_teams()
-    if not teams:
+    constructors = get_teams()
+    if not constructors:
         print("Aucune équipe trouvée.")
         return
 
     all_data = []
-    for team_url in teams:
+    for team_url in constructors:
         print(f"Scraping de l'équipe : {team_url}")
         team_data = scrape_team_details(team_url)
         if team_data:

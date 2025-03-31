@@ -1,25 +1,29 @@
 package com.dg.f1fantasyback.mapper;
 
-import com.dg.f1fantasyback.model.dto.user.UserCreateDto;
-import com.dg.f1fantasyback.model.dto.user.UserDetailDto;
-import com.dg.f1fantasyback.model.dto.user.UserUpdateDto;
-import com.dg.f1fantasyback.model.entity.User;
+import com.dg.f1fantasyback.model.dto.app_user.UserCreateDto;
+import com.dg.f1fantasyback.model.dto.app_user.UserDetailDto;
+import com.dg.f1fantasyback.model.dto.app_user.UserUpdateDto;
+import com.dg.f1fantasyback.model.entity.AppUser;
 import org.mapstruct.*;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserMapper {
-    User toEntity(UserDetailDto userDetailDto);
-    User toEntity(UserCreateDto userCreateDto);
-    User toEntity(UserUpdateDto userUpdateDto);
+    AppUser toEntity(UserDetailDto userDetailDto);
+
+    AppUser toEntity(UserCreateDto userCreateDto);
+
+    AppUser toEntity(UserUpdateDto userUpdateDto);
 
     @Mapping(source = "id", target = "id")
-    UserDetailDto toDetailDto(User user);
-    UserCreateDto toCreateDto(User user);
-    UserUpdateDto toUpdateDto(User user);
+    UserDetailDto toDetailDto(AppUser appUser);
+
+    UserCreateDto toCreateDto(AppUser appUser);
+
+    UserUpdateDto toUpdateDto(AppUser appUser);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    User partialUpdate(UserCreateDto userCreateDto, @MappingTarget User user);
+    AppUser partialUpdate(UserCreateDto userCreateDto, @MappingTarget AppUser appUser);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    User partialUpdate(UserUpdateDto userUpdateDto, @MappingTarget User user);
+    AppUser partialUpdate(UserUpdateDto userUpdateDto, @MappingTarget AppUser appUser);
 }

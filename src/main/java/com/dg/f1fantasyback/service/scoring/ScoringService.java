@@ -1,14 +1,14 @@
 package com.dg.f1fantasyback.service.scoring;
 
 import com.dg.f1fantasyback.exception.PointCalculatorException;
-import com.dg.f1fantasyback.model.entity.Race;
-import com.dg.f1fantasyback.model.entity.RaceResult;
-import com.dg.f1fantasyback.model.entity.Team;
-import com.dg.f1fantasyback.model.enums.RaceTypeEnum;
-import com.dg.f1fantasyback.repository.RaceRepository;
-import com.dg.f1fantasyback.repository.RaceResultRepository;
-import com.dg.f1fantasyback.service.FantasyRacePointService;
-import com.dg.f1fantasyback.service.RaceResultService;
+import com.dg.f1fantasyback.model.entity.racing.Constructor;
+import com.dg.f1fantasyback.model.entity.racing.Event;
+import com.dg.f1fantasyback.model.entity.racing.EventResult;
+import com.dg.f1fantasyback.model.enums.EventType;
+import com.dg.f1fantasyback.repository.EventRepository;
+import com.dg.f1fantasyback.repository.EventResultRepository;
+import com.dg.f1fantasyback.service.FantasyScoreService;
+import com.dg.f1fantasyback.service.EventResultService;
 import org.springframework.stereotype.Service;
 
 import java.util.EnumSet;
@@ -20,23 +20,23 @@ import java.util.stream.StreamSupport;
 @Service
 public class ScoringService {
 
-    private final RaceResultService raceResultService;
-    private final FantasyRacePointService fantasyRacePointService;
-    private final RaceResultRepository raceResultRepository;
-    private final RaceRepository raceRepository;
+    private final EventResultService eventResultService;
+    private final FantasyScoreService fantasyScoreService;
+    private final EventResultRepository eventResultRepository;
+    private final EventRepository eventRepository;
 
-    public ScoringService(RaceResultService raceResultService, FantasyRacePointService fantasyRacePointService, RaceResultRepository raceResultRepository, RaceRepository raceRepository) {
-        this.raceResultService = raceResultService;
-        this.fantasyRacePointService = fantasyRacePointService;
-        this.raceResultRepository = raceResultRepository;
-        this.raceRepository = raceRepository;
+    public ScoringService(EventResultService eventResultService, FantasyScoreService fantasyScoreService, EventResultRepository eventResultRepository, EventRepository eventRepository) {
+        this.eventResultService = eventResultService;
+        this.fantasyScoreService = fantasyScoreService;
+        this.eventResultRepository = eventResultRepository;
+        this.eventRepository = eventRepository;
     }
 
     /**
      * Retourne le nombre de point "Fantasy" d'un pilote
      */
-    private int computeDriverPoints(RaceResult result) {
-        RaceTypeEnum type = result.getRace().getType();
+    private int computeDriverPoints(EventResult result) {
+        EventType type = result.getEvent().getType();
         ScoringStrategy strategy = ScoringStrategyFactory.getStrategy(type);
         return strategy.calculateDriverPoints(result);
     }
@@ -44,42 +44,42 @@ public class ScoringService {
     /**
      * Retourne le nombre de point "Fantasy" d'une écurie
      */
-    private int computeTeamPoints(RaceResult resultDriver1, RaceResult resultDriver2) {
-        RaceTypeEnum type = resultDriver1.getRace().getType();
+    private int computeTeamPoints(EventResult resultDriver1, EventResult resultDriver2) {
+        EventType type = resultDriver1.getEvent().getType();
         ScoringStrategy strategy = ScoringStrategyFactory.getStrategy(type);
         return strategy.calculateTeamPoints(resultDriver1, resultDriver2);
     }
 
-    public void computeRacePoints(Race race) {
-        if (race.getIsCalculated()) {
+    public void computeRacePoints(Event event) {
+        if (event.getIsCalculated()) {
             throw new PointCalculatorException("This race has already been calculated");
         }
 
-        if (!EnumSet.of(RaceTypeEnum.GP, RaceTypeEnum.QUALIFYING, RaceTypeEnum.SPRINT).contains(race.getType())) {
+        if (!EnumSet.of(EventType.GP, EventType.QUALIFYING, EventType.SPRINT).contains(event.getType())) {
             throw new PointCalculatorException("This race type is not supported");
         }
 
-        Iterable<RaceResult> results = raceResultService.getResultForRace(race.getId());
+        Iterable<EventResult> results = eventResultService.getResultForRace(event.getId());
         results.forEach(result -> {
             int points = computeDriverPoints(result);
-            fantasyRacePointService.createDriverPoint(race, result.getDriver(), points);
+            fantasyScoreService.createDriverPoint(event, result.getDriver(), points);
         });
 
-        Map<Team, List<RaceResult>> resultsGroupedByTeam = StreamSupport.stream(results.spliterator(), false)
-                                                                        .collect(Collectors.groupingBy(rr -> rr.getDriver().getTeam()));
+        Map<Constructor, List<EventResult>> resultsGroupedByTeam = StreamSupport.stream(results.spliterator(), false)
+                                                                                .collect(Collectors.groupingBy(rr -> rr.getDriver().getConstructor()));
 
         for (var entry : resultsGroupedByTeam.entrySet()) {
             int points = computeTeamPoints(entry.getValue().get(0), entry.getValue().get(1));
-            fantasyRacePointService.createTeamPoint(race, entry.getKey(), points);
+            fantasyScoreService.createTeamPoint(event, entry.getKey(), points);
         }
 
-        race.setIsCalculated(true);
-        raceRepository.saveAndFlush(race);
+        event.setIsCalculated(true);
+        eventRepository.saveAndFlush(event);
     }
 
     public void computeUncalculedRaces() {
-        List<Race> races = raceRepository.findAllByIsCalculatedOrderByTypeAsc(false);
+        List<Event> events = eventRepository.findAllByIsCalculatedOrderByTypeAsc(false);
 
-        races.forEach(this::computeRacePoints);
+        events.forEach(this::computeRacePoints);
     }
 }

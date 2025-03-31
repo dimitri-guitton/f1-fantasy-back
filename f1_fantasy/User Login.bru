@@ -12,9 +12,9 @@ post {
 
 auth:basic {
   username: my-user
-  password: user
+  password: appUser
 }
 
 script:post-response {
-  bru.setVar('user-token',res.body.token);
+  bru.setVar('appUser-token',res.body.token);
 }

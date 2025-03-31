@@ -1,6 +1,6 @@
 package com.dg.f1fantasyback.service.scoring;
 
-import com.dg.f1fantasyback.model.enums.RaceTypeEnum;
+import com.dg.f1fantasyback.model.enums.EventType;
 
 public enum PositionPoints {
     P1(25, 8, 10),
@@ -24,19 +24,7 @@ public enum PositionPoints {
         this.qualifPoints = qualifPoints;
     }
 
-    private int getPoints(RaceTypeEnum raceType) {
-        if (raceType == RaceTypeEnum.QUALIFYING) {
-            return qualifPoints;
-        } else if (raceType == RaceTypeEnum.GP) {
-            return coursePoints;
-        } else if (raceType == RaceTypeEnum.SPRINT) {
-            return sprintPoints;
-        }
-
-        return 0;
-    }
-
-    public static int getPointsForPosition(int position, RaceTypeEnum raceType) {
+    public static int getPointsForPosition(int position, EventType raceType) {
         return switch (position) {
             case 1 -> P1.getPoints(raceType);
             case 2 -> P2.getPoints(raceType);
@@ -50,6 +38,18 @@ public enum PositionPoints {
             case 10 -> P10.getPoints(raceType);
             default -> 0;
         };
+    }
+
+    private int getPoints(EventType raceType) {
+        if (raceType == EventType.QUALIFYING) {
+            return qualifPoints;
+        } else if (raceType == EventType.GP) {
+            return coursePoints;
+        } else if (raceType == EventType.SPRINT) {
+            return sprintPoints;
+        }
+
+        return 0;
     }
 }
 

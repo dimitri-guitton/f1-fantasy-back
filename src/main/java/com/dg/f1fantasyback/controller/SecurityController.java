@@ -1,11 +1,14 @@
 package com.dg.f1fantasyback.controller;
 
-import com.dg.f1fantasyback.model.dto.user.UserCreateDto;
+import com.dg.f1fantasyback.model.dto.app_user.UserCreateDto;
 import com.dg.f1fantasyback.security.JWTService;
 import com.dg.f1fantasyback.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 

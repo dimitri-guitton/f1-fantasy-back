@@ -1,6 +1,6 @@
 package com.dg.f1fantasyback.security;
 
-import com.dg.f1fantasyback.model.entity.User;
+import com.dg.f1fantasyback.model.entity.AppUser;
 import com.dg.f1fantasyback.repository.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,12 +21,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé"));
+        AppUser appUser = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé"));
 
         return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPassword(),
-                List.of(new SimpleGrantedAuthority(user.getRole().name()))
+                appUser.getUsername(),
+                appUser.getPassword(),
+                List.of(new SimpleGrantedAuthority(appUser.getRole().name()))
         );
     }
 }

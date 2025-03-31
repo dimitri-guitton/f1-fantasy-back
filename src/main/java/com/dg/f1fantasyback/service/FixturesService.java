@@ -1,8 +1,9 @@
 package com.dg.f1fantasyback.service;
 
 import com.dg.f1fantasyback.exception.PointCalculatorException;
-import com.dg.f1fantasyback.model.entity.*;
-import com.dg.f1fantasyback.model.enums.RaceTypeEnum;
+import com.dg.f1fantasyback.model.entity.AppUser;
+import com.dg.f1fantasyback.model.entity.racing.*;
+import com.dg.f1fantasyback.model.enums.EventType;
 import com.dg.f1fantasyback.model.enums.Role;
 import com.dg.f1fantasyback.repository.*;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -28,31 +29,24 @@ import java.util.stream.Collectors;
 
 @Service
 public class FixturesService {
-    private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final TeamRepository teamRepository;
+    private final UserRepository userRepository;
     private final DriverRepository driverRepository;
     private final GrandPrixRepository grandPrixRepository;
-    private final RaceRepository raceRepository;
-    private final RaceResultRepository raceResultRepository;
+    private final EventRepository eventRepository;
+    private final EventResultRepository eventResultRepository;
     private final FantasyRacePointRepository fantasyRacePointRepository;
+    private final ConstructorRepository constructorRepository;
 
-    public FixturesService(UserRepository userRepository,
-                           BCryptPasswordEncoder passwordEncoder,
-                           TeamRepository teamRepository,
-                           DriverRepository driverRepository,
-                           GrandPrixRepository grandPrixRepository,
-                           RaceRepository raceRepository,
-                           RaceResultRepository raceResultRepository,
-                           FantasyRacePointRepository fantasyRacePointRepository) {
-        this.userRepository = userRepository;
+    public FixturesService(BCryptPasswordEncoder passwordEncoder, UserRepository userRepository, DriverRepository driverRepository, GrandPrixRepository grandPrixRepository, EventRepository eventRepository, EventResultRepository eventResultRepository, FantasyRacePointRepository fantasyRacePointRepository, ConstructorRepository constructorRepository) {
         this.passwordEncoder = passwordEncoder;
-        this.teamRepository = teamRepository;
+        this.userRepository = userRepository;
         this.driverRepository = driverRepository;
         this.grandPrixRepository = grandPrixRepository;
-        this.raceRepository = raceRepository;
-        this.raceResultRepository = raceResultRepository;
+        this.eventRepository = eventRepository;
+        this.eventResultRepository = eventResultRepository;
         this.fantasyRacePointRepository = fantasyRacePointRepository;
+        this.constructorRepository = constructorRepository;
     }
 
     public void load() throws IOException {
@@ -63,9 +57,9 @@ public class FixturesService {
     }
 
     public void reloadRaceResults() {
-        raceResultRepository.deleteAll();
+        eventResultRepository.deleteAll();
         fantasyRacePointRepository.deleteAll();
-        raceRepository.updateIsCalculatedBy(false);
+        eventRepository.updateIsCalculatedBy(false);
         loadRaceResult();
     }
 
@@ -74,23 +68,23 @@ public class FixturesService {
             return;
         }
 
-        User user = User.builder().username("my-admin").password(passwordEncoder.encode("admin")).enabled(true).role(
+        AppUser appUser = AppUser.builder().username("my-admin").password(passwordEncoder.encode("admin")).enabled(true).role(
                 Role.ROLE_ADMIN).build()
                 ;
-        userRepository.save(user);
+        userRepository.save(appUser);
 
-        User user2 = User.builder()
-                         .username("my-user")
-                         .password(passwordEncoder.encode("user"))
-                         .enabled(true)
-                         .role(Role.ROLE_USER)
-                         .build()
+        AppUser appUser2 = AppUser.builder()
+                                  .username("my-user")
+                                  .password(passwordEncoder.encode("user"))
+                                  .enabled(true)
+                                  .role(Role.ROLE_USER)
+                                  .build()
                 ;
-        userRepository.save(user2);
+        userRepository.save(appUser2);
     }
 
     private void loadTeams() throws IOException {
-        if (teamRepository.count() > 0) {
+        if (constructorRepository.count() > 0) {
             return;
         }
 
@@ -119,13 +113,13 @@ public class FixturesService {
 
             downloadImage(fullLogo, fullLogoFileName);
 
-            Team team = Team.builder()
-                            .label((String) teamData.get("name"))
-                            .logo(logoFileName)
-                            .fullLogo(fullLogoFileName)
-                            .build()
+            Constructor constructor = Constructor.builder()
+                                                 .label((String) teamData.get("name"))
+                                                 .logo(logoFileName)
+                                                 .fullLogo(fullLogoFileName)
+                                                 .build()
                     ;
-            teamRepository.save(team);
+            constructorRepository.save(constructor);
 
             @SuppressWarnings("unchecked")
             List<Map<String, Object>> driversData = (List<Map<String, Object>>) teamData.get("drivers");
@@ -142,7 +136,7 @@ public class FixturesService {
                                                                .firstName(nameParts[0])
                                                                .lastName(nameParts[1])
                                                                .profilePicture(imageFileName)
-                                                               .team(team)
+                                                               .constructor(constructor)
                                                                .build();
                                               })
                                               .collect(Collectors.toList())
@@ -171,44 +165,44 @@ public class FixturesService {
                                            .build()
                     ;
 
-            Race qualifying = Race.builder()
-                                  .grandPrix(grandPrix)
-                                  .label("Qualifiquation")
-                                  .startAt(sessions.has("qualifying") ?
-                                                   LocalDateTime.parse(sessions.get("qualifying").asText(),
-                                                                       formatter) : null)
-                                  .type(RaceTypeEnum.QUALIFYING)
-                                  .isCalculated(false)
-                                  .build()
+            Event qualifying = Event.builder()
+                                    .grandPrix(grandPrix)
+                                    .label("Qualifiquation")
+                                    .startAt(sessions.has("qualifying") ?
+                                                     LocalDateTime.parse(sessions.get("qualifying").asText(),
+                                                                         formatter) : null)
+                                    .type(EventType.QUALIFYING)
+                                    .isCalculated(false)
+                                    .build()
                     ;
 
-            Race gp = Race.builder()
-                          .grandPrix(grandPrix)
-                          .label("GP")
-                          .startAt(sessions.has("gp") ?
-                                           LocalDateTime.parse(sessions.get("gp").asText(), formatter) : null)
-                          .type(RaceTypeEnum.GP)
-                          .isCalculated(false)
-                          .build()
+            Event gp = Event.builder()
+                            .grandPrix(grandPrix)
+                            .label("GP")
+                            .startAt(sessions.has("gp") ?
+                                             LocalDateTime.parse(sessions.get("gp").asText(), formatter) : null)
+                            .type(EventType.GP)
+                            .isCalculated(false)
+                            .build()
                     ;
 
-            grandPrix.setRaces(Set.of(qualifying, gp));
+            grandPrix.setEvents(Set.of(qualifying, gp));
 
             grandPrixRepository.save(grandPrix);
         }
     }
 
     private void loadRaceResult() {
-        if (raceResultRepository.count() > 0) {
+        if (eventResultRepository.count() > 0) {
             return;
         }
 
-        List<Race> races = raceRepository.findAllByOrderByTypeAscIdAsc();
+        List<Event> events = eventRepository.findAllByOrderByTypeAscIdAsc();
         List<Driver> drivers = driverRepository.findAll();
 
-        List<RaceResult> raceResults = new ArrayList<>();
+        List<EventResult> eventResults = new ArrayList<>();
         Map<String, Integer> qualifyingPos = new HashMap<>();
-        races.forEach(race -> {
+        events.forEach(race -> {
             Collections.shuffle(drivers);
             AtomicInteger position = new AtomicInteger(0);
             AtomicBoolean dnf = new AtomicBoolean(false);
@@ -221,7 +215,7 @@ public class FixturesService {
                 String key = race.getGrandPrix().getId().toString() + '_' + driver.getId().toString();
                 Integer startPosition = null;
 
-                if (race.getType() == RaceTypeEnum.GP) {
+                if (race.getType() == EventType.GP) {
                     startPosition = qualifyingPos.getOrDefault(key, null);
 
                     if (startPosition == null) {
@@ -248,26 +242,26 @@ public class FixturesService {
                 int nbOvertakes = new Random().nextInt(10);
 
 
-                RaceResult raceResult = RaceResult.builder()
-                                                  .driver(driver)
-                                                  .race(race)
-                                                  .startPosition(startPosition)
-                                                  .endPosition(position.getAndIncrement())
-                                                  .dnf(dnf.get())
-                                                  .driverOfTheDay(driverOfTheDay.get())
-                                                  .fastestLap(isFastestLap.get())
-                                                  .nbOvertakes(nbOvertakes)
-                                                  .build()
+                EventResult eventResult = EventResult.builder()
+                                                     .driver(driver)
+                                                     .event(race)
+                                                     .startPosition(startPosition)
+                                                     .endPosition(position.getAndIncrement())
+                                                     .dnf(dnf.get())
+                                                     .driverOfTheDay(driverOfTheDay.get())
+                                                     .fastestLap(isFastestLap.get())
+                                                     .nbOvertakes(nbOvertakes)
+                                                     .build()
                         ;
-                raceResults.add(raceResult);
+                eventResults.add(eventResult);
 
-                if (race.getType() == RaceTypeEnum.QUALIFYING) {
+                if (race.getType() == EventType.QUALIFYING) {
                     qualifyingPos.put(key, position.get());
                 }
             });
         });
 
-        raceResultRepository.saveAll(raceResults);
+        eventResultRepository.saveAll(eventResults);
     }
 
     private void downloadImage(String imageUrl, String fileName) {

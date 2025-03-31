@@ -1,8 +1,8 @@
 package com.dg.f1fantasyback.controller;
 
-import com.dg.f1fantasyback.model.dto.user.UserCreateDto;
-import com.dg.f1fantasyback.model.dto.user.UserDetailDto;
-import com.dg.f1fantasyback.model.dto.user.UserUpdateDto;
+import com.dg.f1fantasyback.model.dto.app_user.UserCreateDto;
+import com.dg.f1fantasyback.model.dto.app_user.UserDetailDto;
+import com.dg.f1fantasyback.model.dto.app_user.UserUpdateDto;
 import com.dg.f1fantasyback.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;

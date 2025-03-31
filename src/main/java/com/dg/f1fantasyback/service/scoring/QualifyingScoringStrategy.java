@@ -1,7 +1,7 @@
 package com.dg.f1fantasyback.service.scoring;
 
-import com.dg.f1fantasyback.model.entity.RaceResult;
-import com.dg.f1fantasyback.model.enums.RaceTypeEnum;
+import com.dg.f1fantasyback.model.entity.racing.EventResult;
+import com.dg.f1fantasyback.model.enums.EventType;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -9,16 +9,16 @@ public class QualifyingScoringStrategy implements ScoringStrategy {
     private static final int DNF_PENALTY = -5;
 
     @Override
-    public int calculateDriverPoints(RaceResult result) {
+    public int calculateDriverPoints(EventResult result) {
         if (result.getDnf()) {
             return DNF_PENALTY;
         }
 
-        return PositionPoints.getPointsForPosition(result.getEndPosition(), RaceTypeEnum.QUALIFYING);
+        return PositionPoints.getPointsForPosition(result.getEndPosition(), EventType.QUALIFYING);
     }
 
     @Override
-    public int calculateTeamPoints(RaceResult resultDriver1, RaceResult resultDriver2) {
+    public int calculateTeamPoints(EventResult resultDriver1, EventResult resultDriver2) {
         int posDriver1 = resultDriver1.getEndPosition();
         int posDriver2 = resultDriver2.getEndPosition();
 

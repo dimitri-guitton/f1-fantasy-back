@@ -28,13 +28,13 @@ public class FileController {
                 contentType = "image/png";
             } else if (imageName.endsWith(".gif")) {
                 contentType = "image/gif";
-            }else if (imageName.endsWith(".avif")) {
+            } else if (imageName.endsWith(".avif")) {
                 contentType = "image/avif";
             }
 
             return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_TYPE, contentType)
-                    .body(image);
+                                 .header(HttpHeaders.CONTENT_TYPE, contentType)
+                                 .body(image);
         } catch (IOException e) {
             return ResponseEntity.notFound().build();
         }

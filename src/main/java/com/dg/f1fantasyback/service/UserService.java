@@ -2,10 +2,10 @@ package com.dg.f1fantasyback.service;
 
 import com.dg.f1fantasyback.exception.UniqueConstraintException;
 import com.dg.f1fantasyback.mapper.UserMapper;
-import com.dg.f1fantasyback.model.dto.user.UserCreateDto;
-import com.dg.f1fantasyback.model.dto.user.UserDetailDto;
-import com.dg.f1fantasyback.model.dto.user.UserUpdateDto;
-import com.dg.f1fantasyback.model.entity.User;
+import com.dg.f1fantasyback.model.dto.app_user.UserCreateDto;
+import com.dg.f1fantasyback.model.dto.app_user.UserDetailDto;
+import com.dg.f1fantasyback.model.dto.app_user.UserUpdateDto;
+import com.dg.f1fantasyback.model.entity.AppUser;
 import com.dg.f1fantasyback.repository.UserRepository;
 import com.dg.f1fantasyback.security.JWTService;
 import jakarta.validation.Valid;
@@ -23,7 +23,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
-    private JWTService jwtService;
+    private final JWTService jwtService;
 
     public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder, JWTService jwtService) {
         this.userRepository = userRepository;
@@ -57,9 +57,9 @@ public class UserService {
             throw new UniqueConstraintException("Le nom d'utilisateur est déjà utilisé");
         }
 
-        User user = userMapper.toEntity(userCreateDto);
-        user.setPassword(passwordEncoder.encode(userCreateDto.getPassword())); // Hash du mot de passe
-        return userMapper.toDetailDto(userRepository.save(user));
+        AppUser appUser = userMapper.toEntity(userCreateDto);
+        appUser.setPassword(passwordEncoder.encode(userCreateDto.getPassword())); // Hash du mot de passe
+        return userMapper.toDetailDto(userRepository.save(appUser));
     }
 
     public UserDetailDto updateUser(UUID id, UserUpdateDto userUpdateDto) {
@@ -87,7 +87,7 @@ public class UserService {
     }
 
     public String register(@Valid UserCreateDto userCreateDto) {
-       UserDetailDto user = createUser(userCreateDto);
+        UserDetailDto user = createUser(userCreateDto);
 
         return jwtService.generateToken(user);
     }

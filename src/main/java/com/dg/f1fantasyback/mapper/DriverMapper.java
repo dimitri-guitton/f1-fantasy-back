@@ -1,7 +1,7 @@
 package com.dg.f1fantasyback.mapper;
 
 import com.dg.f1fantasyback.model.dto.driver.DriverDto;
-import com.dg.f1fantasyback.model.entity.Driver;
+import com.dg.f1fantasyback.model.entity.racing.Driver;
 import org.mapstruct.*;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
