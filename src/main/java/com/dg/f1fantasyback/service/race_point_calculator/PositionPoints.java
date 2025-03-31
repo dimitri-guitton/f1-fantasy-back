@@ -3,30 +3,34 @@ package com.dg.f1fantasyback.service.race_point_calculator;
 import com.dg.f1fantasyback.model.enums.RaceTypeEnum;
 
 public enum PositionPoints {
-    P1(25, 10),
-    P2(18, 9),
-    P3(15, 8),
-    P4(12, 7),
-    P5(10, 6),
-    P6(8, 5),
-    P7(6, 4),
-    P8(4, 3),
-    P9(2, 2),
-    P10(1, 1);
+    P1(25, 8, 10),
+    P2(18, 7, 9),
+    P3(15, 6, 8),
+    P4(12, 5, 7),
+    P5(10, 4, 6),
+    P6(8, 3, 5),
+    P7(6, 2, 4),
+    P8(4, 1, 3),
+    P9(2, 0, 2),
+    P10(1, 0, 1);
 
     private final int coursePoints;
+    private final int sprintPoints;
     private final int qualifPoints;
 
-    PositionPoints(int coursePoints, int qualifPoints) {
+    PositionPoints(int coursePoints, int sprintPoints, int qualifPoints) {
         this.coursePoints = coursePoints;
+        this.sprintPoints = sprintPoints;
         this.qualifPoints = qualifPoints;
     }
 
-    public int getPoints(RaceTypeEnum raceType) {
+    private int getPoints(RaceTypeEnum raceType) {
         if (raceType == RaceTypeEnum.QUALIFYING) {
             return qualifPoints;
         } else if (raceType == RaceTypeEnum.GP) {
             return coursePoints;
+        } else if (raceType == RaceTypeEnum.SPRINT) {
+            return sprintPoints;
         }
 
         return 0;
