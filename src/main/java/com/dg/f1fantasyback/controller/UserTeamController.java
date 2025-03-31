@@ -28,6 +28,12 @@ public class UserTeamController {
         return userTeamService.getTeamById(id);
     }
 
+    @GetMapping("/{teamId}/points/{raceId}/race")
+    public Object getUserTeamPointsOnRace(@PathVariable Long teamId, @PathVariable Integer raceId){
+        return userTeamService.getUserTeamPointsOnRace(teamId, raceId);
+    }
+
+
     @PostMapping
     public UserTeamDetailDto createUserTeam(@RequestBody UserTeamCreateDto userTeamCreateDto) {
         return userTeamService.createTeam(authService.getAuthenticatedUser(), userTeamCreateDto);

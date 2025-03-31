@@ -1,19 +1,19 @@
 meta {
   name: Update
   type: http
-  seq: 4
+  seq: 5
 }
 
 put {
-  url: {{host}}/user-teams/5
+  url: {{host}}/user-teams/7
   body: json
   auth: inherit
 }
 
 body:json {
   {
-    "label": "Equipe 1 (update)",
-    "driverIds": [10,11,12,16,26],
-    "teamIds": [18,23]
+    "label": "Equipe 1",
+    "driverIds": [169,170,172,175,177],
+    "teamIds": [100,109]
   }
 }

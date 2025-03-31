@@ -21,4 +21,7 @@ public interface FantasyRacePointRepository extends JpaRepository<FantasyRacePoi
 
     @Query("SELECT frp.team.id,frp.team.label, SUM(frp.point) as point FROM FantasyRacePoint frp WHERE frp.team.id IS NOT NULL GROUP BY frp.team.id, frp.team.label ORDER BY point DESC")
     List<Object[]> findTeamLeaderboard();
+
+    @Query("SELECT sum(frp.point) as points FROM FantasyRacePoint frp WHERE frp.race.id = :raceId AND (frp.team.id = :teamId1 OR frp.team.id = :teamId2 OR frp.driver.id = :driverId1 OR frp.driver.id = :driverId2 OR frp.driver.id = :driverId3 OR frp.driver.id = :driverId4 OR frp.driver.id = :driverId5)")
+    Integer getPointsOnRaceByUserTeam(int raceId, int teamId1, int teamId2, int driverId1, int driverId2, int driverId3, int driverId4, int driverId5);
 }
