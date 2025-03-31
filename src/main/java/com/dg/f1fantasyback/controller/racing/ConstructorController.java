@@ -17,12 +17,12 @@ public class ConstructorController {
     }
 
     @GetMapping
-    public Iterable<ConstructorDto> getUserTeams() {
-        return constructorService.getTeams();
+    public Iterable<ConstructorDto> getConstructorS() {
+        return constructorService.getConstructors();
     }
 
     @GetMapping("/{id}")
-    public ConstructorDto getUserTeamById(@PathVariable Integer id) {
-        return constructorService.getTeamById(id);
+    public ConstructorDto getConstructorById(@PathVariable Integer id) {
+        return constructorService.getConstructorById(id);
     }
 }

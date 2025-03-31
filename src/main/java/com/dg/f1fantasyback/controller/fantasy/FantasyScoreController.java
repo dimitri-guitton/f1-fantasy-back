@@ -19,13 +19,13 @@ public class FantasyScoreController {
     }
 
     @GetMapping("/events/{eventId}/constructors/{constructorId}")
-    public Integer getTeamPointOnRace(@PathVariable Integer eventId, @PathVariable Integer constructorId) {
-        return fantasyScoreService.getTeamPointOnRace(constructorId, eventId);
+    public Integer getConstructorPointsOnRace(@PathVariable Integer eventId, @PathVariable Integer constructorId) {
+        return fantasyScoreService.getConstructorPointsOnRace(constructorId, eventId);
     }
 
     @GetMapping("/constructors/{constructorId}")
-    public Integer getTeamPoints(@PathVariable Integer constructorId) {
-        return fantasyScoreService.getTeamPoints(constructorId);
+    public Integer getConstructorPoints(@PathVariable Integer constructorId) {
+        return fantasyScoreService.getConstructorPoints(constructorId);
     }
 
     @GetMapping("/events/{eventId}/drivers/{driverId}")
@@ -39,8 +39,8 @@ public class FantasyScoreController {
     }
 
     @GetMapping("/leaderboard/constructors")
-    public List<Map<String, String>> getTeamLeaderboard() {
-        return fantasyScoreService.getTeamLeaderboard();
+    public List<Map<String, String>> getConstructorLeaderboard() {
+        return fantasyScoreService.getConstructorLeaderboard();
     }
 
     @GetMapping("/leaderboard/drivers")

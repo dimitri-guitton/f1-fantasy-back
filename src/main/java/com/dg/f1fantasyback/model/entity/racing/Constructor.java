@@ -20,28 +20,18 @@ public class Constructor {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "label", nullable = false, unique = true)
-    private String label;
+    @Column(name = "name", nullable = false, unique = true)
+    private String name;
 
     @Column(name = "logo")
     private String logo;
+
+    @Column(name = "full_logo")
+    private String fullLogo;
 
     @OneToMany(mappedBy = "constructor", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Driver> drivers = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "constructor", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MarketValue> marketValues = new LinkedHashSet<>();
-    @Column(name = "full_logo")
-    private String fullLogo;
-
-    public void addDriver(Driver driver) {
-        drivers.add(driver);
-        driver.setConstructor(this);
-    }
-
-    public void removeDriver(Driver driver) {
-        drivers.remove(driver);
-        driver.setConstructor(null);
-    }
-
 }

@@ -22,7 +22,7 @@ public class EventResult {
     private Driver driver;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "race_id", nullable = false)
+    @JoinColumn(name = "event_id", nullable = false)
     private Event event;
 
     @Column(name = "start_position")

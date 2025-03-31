@@ -21,14 +21,14 @@ public class CalculatorController {
     }
 
     @GetMapping("/compute-all")
-    public void calculateRacePoints() {
+    public void computeUncalculedRaces() {
         scoringService.computeUncalculedRaces();
     }
 
     @GetMapping("/compute/events/{id}")
-    public void calculateRacePoints(@PathVariable Integer id) {
+    public void computeRace(@PathVariable Integer id) {
         Event event = eventRepository.findById(id).orElseThrow(() -> new PointCalculatorException("Invalid Race ID"));
 
-        scoringService.computeRacePoints(event);
+        scoringService.computeEventPoints(event);
     }
 }

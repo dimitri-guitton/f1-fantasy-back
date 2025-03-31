@@ -59,6 +59,7 @@ public class UserService {
 
         AppUser appUser = userMapper.toEntity(userCreateDto);
         appUser.setPassword(passwordEncoder.encode(userCreateDto.getPassword())); // Hash du mot de passe
+        appUser.setEnabled(true);
         return userMapper.toDetailDto(userRepository.save(appUser));
     }
 

@@ -16,12 +16,12 @@ public interface FantasyRacePointRepository extends JpaRepository<FantasyScore, 
 
     List<FantasyScore> findByDriver_Id(Integer driverId);
 
-    @Query("SELECT frp.driver.id,frp.driver.lastName, SUM(frp.point) as point FROM FantasyScore frp WHERE frp.driver.id IS NOT NULL GROUP BY frp.driver.id, frp.driver.lastName ORDER BY point DESC")
+    @Query("SELECT frp.driver.id,frp.driver.lastName, SUM(frp.points) as point FROM FantasyScore frp WHERE frp.driver.id IS NOT NULL GROUP BY frp.driver.id, frp.driver.lastName ORDER BY point DESC")
     List<Object[]> findDriverLeaderboard();
 
-    @Query("SELECT frp.constructor.id,frp.constructor.label, SUM(frp.point) as point FROM FantasyScore frp WHERE frp.constructor.id IS NOT NULL GROUP BY frp.constructor.id, frp.constructor.label ORDER BY point DESC")
+    @Query("SELECT frp.constructor.id,frp.constructor.name, SUM(frp.points) as point FROM FantasyScore frp WHERE frp.constructor.id IS NOT NULL GROUP BY frp.constructor.id, frp.constructor.name ORDER BY point DESC")
     List<Object[]> findTeamLeaderboard();
 
-    @Query("SELECT sum(frp.point) as points FROM FantasyScore frp WHERE frp.event.id = :raceId AND (frp.constructor.id = :teamId1 OR frp.constructor.id = :teamId2 OR frp.driver.id = :driverId1 OR frp.driver.id = :driverId2 OR frp.driver.id = :driverId3 OR frp.driver.id = :driverId4 OR frp.driver.id = :driverId5)")
+    @Query("SELECT sum(frp.points) as points FROM FantasyScore frp WHERE frp.event.id = :raceId AND (frp.constructor.id = :teamId1 OR frp.constructor.id = :teamId2 OR frp.driver.id = :driverId1 OR frp.driver.id = :driverId2 OR frp.driver.id = :driverId3 OR frp.driver.id = :driverId4 OR frp.driver.id = :driverId5)")
     Integer getPointsOnRaceByUserTeam(int raceId, int teamId1, int teamId2, int driverId1, int driverId2, int driverId3, int driverId4, int driverId5);
 }

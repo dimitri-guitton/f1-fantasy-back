@@ -18,37 +18,37 @@ public class MarketValueController {
     }
 
     @GetMapping
-    public Iterable<MarketValueDto> getPrices() {
-        return marketValueService.getPrices();
+    public Iterable<MarketValueDto> getMarketValues() {
+        return marketValueService.getMarketValues();
     }
 
     @GetMapping("/{id}")
-    public MarketValueDto getPriceById(@PathVariable UUID id) {
-        return marketValueService.getPriceById(id);
+    public MarketValueDto getMarketValuById(@PathVariable UUID id) {
+        return marketValueService.getMarketValueById(id);
     }
 
     @GetMapping("/constructors/{constructorId}")
-    public Iterable<MarketValueDto> getPricesByTeamId(@PathVariable Integer constructorId) {
-        return marketValueService.getPricesByTeamId(constructorId);
+    public Iterable<MarketValueDto> getMarketValuesForConstructor(@PathVariable Integer constructorId) {
+        return marketValueService.getMarketValuesForConstructor(constructorId);
     }
 
     @GetMapping("/constructors/{constructorId}/current")
-    public MarketValueDto getCurrentPriceByTeamId(@PathVariable Integer constructorId) {
-        return marketValueService.getCurrentPriceByTeamId(constructorId);
+    public MarketValueDto getCurrentValueForContructor(@PathVariable Integer constructorId) {
+        return marketValueService.getCurrentValueForContructor(constructorId);
     }
 
     @GetMapping("/drivers/{driverId}")
-    public Iterable<MarketValueDto> getPricesByDriverId(@PathVariable Integer driverId) {
-        return marketValueService.getPricesByDriverId(driverId);
+    public Iterable<MarketValueDto> getMarketValueForDriver(@PathVariable Integer driverId) {
+        return marketValueService.getMarketValueForDriver(driverId);
     }
 
     @GetMapping("/drivers/{driverId}/current")
-    public MarketValueDto getCurrentPriceByDriverId(@PathVariable Integer driverId) {
-        return marketValueService.getCurrentPriceByDriverId(driverId);
+    public MarketValueDto getCurrentValueForDriver(@PathVariable Integer driverId) {
+        return marketValueService.getCurrentValueForDriver(driverId);
     }
 
     @PostMapping
     public MarketValueDto create(@Valid @RequestBody MarketValueCreateDto marketValueCreateDto) {
-        return marketValueService.createPrice(marketValueCreateDto);
+        return marketValueService.createMarketValue(marketValueCreateDto);
     }
 }

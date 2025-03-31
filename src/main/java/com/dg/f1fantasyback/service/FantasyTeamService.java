@@ -46,7 +46,7 @@ public class FantasyTeamService {
 
     public FantasyTeamDetailDto createTeam(AppUser appUser, FantasyTeamCreateDto fantasyTeamCreateDto) {
         FantasyTeam fantasyTeam = fantasyTeamMapper.toEntity(fantasyTeamCreateDto);
-        fantasyTeam.setAppUser(appUser);
+        fantasyTeam.setUser(appUser);
 
         return fantasyTeamMapper.toDetailDto(fantasyTeamRepository.save(fantasyTeam));
     }
@@ -84,7 +84,7 @@ public class FantasyTeamService {
         fantasyTeamRepository.deleteById(id);
     }
 
-    public Integer getUserTeamPointsOnRace(Long teamId, Integer raceId) {
+    public Integer getFantasyTeamPointsOnRace(Long teamId, Integer raceId) {
         Optional<FantasyTeam> optUserTeam = fantasyTeamRepository.findById(teamId);
         if (optUserTeam.isEmpty()) {
             throw new IllegalArgumentException("Invalid team id");

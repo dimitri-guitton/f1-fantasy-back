@@ -19,11 +19,11 @@ public class ConstructorService {
         this.constructorMapper = constructorMapper;
     }
 
-    public Iterable<ConstructorDto> getTeams() {
+    public Iterable<ConstructorDto> getConstructors() {
         return constructorRepository.findAll().stream().map(constructorMapper::toDto).collect(Collectors.toList());
     }
 
-    public ConstructorDto getTeamById(Integer id) {
+    public ConstructorDto getConstructorById(Integer id) {
         return constructorMapper.toDto(constructorRepository.findById(id).orElseThrow());
     }
 }

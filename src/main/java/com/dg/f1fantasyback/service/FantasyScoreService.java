@@ -18,21 +18,21 @@ public class FantasyScoreService {
         this.fantasyRacePointRepository = fantasyRacePointRepository;
     }
 
-    public Integer getTeamPointOnRace(Integer teamId, Integer raceId) {
+    public Integer getConstructorPointsOnRace(Integer teamId, Integer raceId) {
         Optional<FantasyScore> result = fantasyRacePointRepository.findFirstByConstructor_IdAndEvent_Id(teamId, raceId);
 
         if (result.isPresent()) {
-            return result.get().getPoint();
+            return result.get().getPoints();
         } else {
             return 0;
         }
     }
 
-    public Integer getTeamPoints(Integer teamId) {
+    public Integer getConstructorPoints(Integer teamId) {
         List<FantasyScore> results = fantasyRacePointRepository.findByConstructor_Id(teamId);
         Integer totalPoints = 0;
         for (FantasyScore result : results) {
-            totalPoints += result.getPoint();
+            totalPoints += result.getPoints();
         }
 
         return totalPoints;
@@ -43,7 +43,7 @@ public class FantasyScoreService {
         Optional<FantasyScore> result = fantasyRacePointRepository.findFirstByDriver_IdAndEvent_Id(driverId, raceId);
 
         if (result.isPresent()) {
-            return result.get().getPoint();
+            return result.get().getPoints();
         } else {
             return 0;
         }
@@ -53,14 +53,14 @@ public class FantasyScoreService {
         List<FantasyScore> results = fantasyRacePointRepository.findByDriver_Id((driverId));
         Integer totalPoints = 0;
         for (FantasyScore result : results) {
-            totalPoints += result.getPoint();
+            totalPoints += result.getPoints();
         }
 
         return totalPoints;
 
     }
 
-    public List<Map<String, String>> getTeamLeaderboard() {
+    public List<Map<String, String>> getConstructorLeaderboard() {
         List<Object[]> result = fantasyRacePointRepository.findTeamLeaderboard();
         List<Map<String, String>> leaderboard = new ArrayList<>();
 
@@ -88,19 +88,15 @@ public class FantasyScoreService {
         return leaderboard;
     }
 
-    public FantasyScore createDriverPoint(Event event, Driver driver, int points) {
-        FantasyScore racePoint = FantasyScore.builder().event(event).driver(driver).point(points).build();
+    public void createDriverPoint(Event event, Driver driver, int points) {
+        FantasyScore racePoint = FantasyScore.builder().event(event).driver(driver).points(points).build();
 
         fantasyRacePointRepository.save(racePoint);
-
-        return racePoint;
     }
 
-    public FantasyScore createTeamPoint(Event event, Constructor constructor, int points) {
-        FantasyScore racePoint = FantasyScore.builder().event(event).constructor(constructor).point(points).build();
+    public void createConstructorPoint(Event event, Constructor constructor, int points) {
+        FantasyScore racePoint = FantasyScore.builder().event(event).constructor(constructor).points(points).build();
 
         fantasyRacePointRepository.save(racePoint);
-
-        return racePoint;
     }
 }

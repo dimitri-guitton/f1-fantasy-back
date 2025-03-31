@@ -20,7 +20,7 @@ public class FantasyScore {
     private Long id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "race_id", nullable = false)
+    @JoinColumn(name = "event_id", nullable = false)
     private Event event;
 
     @ManyToOne
@@ -28,10 +28,10 @@ public class FantasyScore {
     private Driver driver;
 
     @ManyToOne
-    @JoinColumn(name = "team_id")
+    @JoinColumn(name = "constructor_id")
     private Constructor constructor;
 
-    @Column(name = "point", nullable = false)
-    private Integer point;
+    @Column(name = "points", nullable = false)
+    private Integer points;
 
 }

@@ -114,7 +114,7 @@ public class FixturesService {
             downloadImage(fullLogo, fullLogoFileName);
 
             Constructor constructor = Constructor.builder()
-                                                 .label((String) teamData.get("name"))
+                                                 .name((String) teamData.get("name"))
                                                  .logo(logoFileName)
                                                  .fullLogo(fullLogoFileName)
                                                  .build()

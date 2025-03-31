@@ -50,7 +50,7 @@ public class ScoringService {
         return strategy.calculateTeamPoints(resultDriver1, resultDriver2);
     }
 
-    public void computeRacePoints(Event event) {
+    public void computeEventPoints(Event event) {
         if (event.getIsCalculated()) {
             throw new PointCalculatorException("This race has already been calculated");
         }
@@ -70,7 +70,7 @@ public class ScoringService {
 
         for (var entry : resultsGroupedByTeam.entrySet()) {
             int points = computeTeamPoints(entry.getValue().get(0), entry.getValue().get(1));
-            fantasyScoreService.createTeamPoint(event, entry.getKey(), points);
+            fantasyScoreService.createConstructorPoint(event, entry.getKey(), points);
         }
 
         event.setIsCalculated(true);
@@ -80,6 +80,6 @@ public class ScoringService {
     public void computeUncalculedRaces() {
         List<Event> events = eventRepository.findAllByIsCalculatedOrderByTypeAsc(false);
 
-        events.forEach(this::computeRacePoints);
+        events.forEach(this::computeEventPoints);
     }
 }

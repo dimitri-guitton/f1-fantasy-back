@@ -28,11 +28,11 @@ public class MarketValue {
     private Driver driver;
 
     @ManyToOne
-    @JoinColumn(name = "team_id")
+    @JoinColumn(name = "constructor_id")
     private Constructor constructor;
 
-    @Column(name = "price", nullable = false)
-    private Long price;
+    @Column(name = "value", nullable = false)
+    private Long value;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)

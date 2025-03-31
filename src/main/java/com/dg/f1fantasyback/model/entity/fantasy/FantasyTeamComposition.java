@@ -27,19 +27,19 @@ public class FantasyTeamComposition {
     private GrandPrix grandPrix;
 
     @ManyToOne
-    @JoinColumn(name = "user_team_id")
+    @JoinColumn(name = "fantasy_team_id")
     private FantasyTeam fantasyTeam;
 
     @ManyToMany
-    @JoinTable(name = "user_team_composition_teams",
-            joinColumns = @JoinColumn(name = "userTeamComposition_id"),
-            inverseJoinColumns = @JoinColumn(name = "teams_id"))
+    @JoinTable(name = "fantasy_team_composition_constructors",
+            joinColumns = @JoinColumn(name = "fantasy_team_composition_id"),
+            inverseJoinColumns = @JoinColumn(name = "constructor_id"))
     private Set<Constructor> constructors = new LinkedHashSet<>();
 
     @ManyToMany
-    @JoinTable(name = "user_team_composition_drivers",
-            joinColumns = @JoinColumn(name = "userTeamComposition_id"),
-            inverseJoinColumns = @JoinColumn(name = "drivers_id"))
+    @JoinTable(name = "fantasy_team_composition_drivers",
+            joinColumns = @JoinColumn(name = "fantasy_team_composition_id"),
+            inverseJoinColumns = @JoinColumn(name = "driver_id"))
     private Set<Driver> drivers = new LinkedHashSet<>();
 
 }

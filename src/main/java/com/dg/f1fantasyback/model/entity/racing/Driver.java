@@ -30,7 +30,7 @@ public class Driver {
     private String profilePicture;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "team_id", nullable = false)
+    @JoinColumn(name = "constructor_id", nullable = false)
     private Constructor constructor;
 
     @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL, orphanRemoval = true)

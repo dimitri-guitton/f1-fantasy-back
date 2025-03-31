@@ -17,12 +17,12 @@ public class DriverController {
     }
 
     @GetMapping
-    public Iterable<DriverDto> getUserTeams() {
+    public Iterable<DriverDto> getDrivers() {
         return driverService.getDrivers();
     }
 
     @GetMapping("/{id}")
-    public DriverDto getUserTeamById(@PathVariable Integer id) {
+    public DriverDto getDriverById(@PathVariable Integer id) {
         return driverService.getDriverById(id);
     }
 }

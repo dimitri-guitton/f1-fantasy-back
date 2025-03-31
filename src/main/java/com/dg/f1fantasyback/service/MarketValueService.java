@@ -31,31 +31,31 @@ public class MarketValueService {
         this.constructorRepository = constructorRepository;
     }
 
-    public Iterable<MarketValueDto> getPrices() {
+    public Iterable<MarketValueDto> getMarketValues() {
         return marketValueRepository.findAll().stream().map(marketValueMapper::toDto).collect(Collectors.toList());
     }
 
-    public MarketValueDto getPriceById(UUID id) {
+    public MarketValueDto getMarketValueById(UUID id) {
         return marketValueMapper.toDto(marketValueRepository.findById(id).orElse(null));
     }
 
-    public Iterable<MarketValueDto> getPricesByTeamId(Integer teamId) {
+    public Iterable<MarketValueDto> getMarketValuesForConstructor(Integer teamId) {
         return marketValueRepository.findAllByConstructor_Id(teamId).stream().map(marketValueMapper::toDto).collect(Collectors.toList());
     }
 
-    public MarketValueDto getCurrentPriceByTeamId(Integer teamId) {
+    public MarketValueDto getCurrentValueForContructor(Integer teamId) {
         return marketValueRepository.findFirstByConstructor_IdOrderByCreatedAtDesc(teamId).map(marketValueMapper::toDto).orElse(null);
     }
 
-    public Iterable<MarketValueDto> getPricesByDriverId(Integer userId) {
+    public Iterable<MarketValueDto> getMarketValueForDriver(Integer userId) {
         return marketValueRepository.findAllByDriver_Id((userId)).stream().map(marketValueMapper::toDto).collect(Collectors.toList());
     }
 
-    public MarketValueDto getCurrentPriceByDriverId(Integer driverId) {
+    public MarketValueDto getCurrentValueForDriver(Integer driverId) {
         return marketValueRepository.findFirstByDriver_IdOrderByCreatedAtDesc(driverId).map(marketValueMapper::toDto).orElse(null);
     }
 
-    public MarketValueDto createPrice(MarketValueCreateDto marketValueCreateDto) {
+    public MarketValueDto createMarketValue(MarketValueCreateDto marketValueCreateDto) {
         Driver driver = null;
         Constructor constructor = null;
 

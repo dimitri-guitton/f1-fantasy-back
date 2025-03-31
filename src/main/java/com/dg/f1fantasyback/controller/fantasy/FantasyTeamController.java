@@ -19,33 +19,33 @@ public class FantasyTeamController {
     }
 
     @GetMapping
-    public Iterable<FantasyTeamDto> getUserTeams() {
+    public Iterable<FantasyTeamDto> getFantasyTeams() {
         return fantasyTeamService.getTeams();
     }
 
     @GetMapping("/{id}")
-    public FantasyTeamDetailDto getUserTeamById(@PathVariable Long id) {
+    public FantasyTeamDetailDto getFantasyTeamById(@PathVariable Long id) {
         return fantasyTeamService.getTeamById(id);
     }
 
     @GetMapping("/{id}/points/events/{eventId}")
-    public Object getUserTeamPointsOnRace(@PathVariable Long id, @PathVariable Integer eventId) {
-        return fantasyTeamService.getUserTeamPointsOnRace(id, eventId);
+    public Object getFantasyTeamPointsOnRace(@PathVariable Long id, @PathVariable Integer eventId) {
+        return fantasyTeamService.getFantasyTeamPointsOnRace(id, eventId);
     }
 
 
     @PostMapping
-    public FantasyTeamDetailDto createUserTeam(@RequestBody FantasyTeamCreateDto fantasyTeamCreateDto) {
+    public FantasyTeamDetailDto createFantasyTeam(@RequestBody FantasyTeamCreateDto fantasyTeamCreateDto) {
         return fantasyTeamService.createTeam(authService.getAuthenticatedUser(), fantasyTeamCreateDto);
     }
 
     @PutMapping("/{id}")
-    public FantasyTeamDetailDto updateUserTeam(@PathVariable Long id, @RequestBody FantasyTeamCreateDto fantasyTeamCreateDto) {
+    public FantasyTeamDetailDto updateFantasyTeam(@PathVariable Long id, @RequestBody FantasyTeamCreateDto fantasyTeamCreateDto) {
         return fantasyTeamService.updateTeam(id, fantasyTeamCreateDto);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUserTeam(@PathVariable Long id) {
+    public void deleteFantasyTeam(@PathVariable Long id) {
         fantasyTeamService.deleteTeam(id);
     }
 }
