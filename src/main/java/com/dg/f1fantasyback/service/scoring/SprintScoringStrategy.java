@@ -1,8 +1,10 @@
-package com.dg.f1fantasyback.service.race_point_calculator;
+package com.dg.f1fantasyback.service.scoring;
 
 import com.dg.f1fantasyback.model.entity.RaceResult;
 import com.dg.f1fantasyback.model.enums.RaceTypeEnum;
+import org.springframework.stereotype.Service;
 
+@Service
 public class SprintScoringStrategy implements ScoringStrategy {
     private static final int DNF_PENALTY = -20;
     private static final int FASTEST_LAP_POINT = 5;
@@ -11,7 +13,7 @@ public class SprintScoringStrategy implements ScoringStrategy {
     private static final int POINT_EARN_BY_OVERTAKE = 1;
 
     @Override
-    public int calculatePoints(RaceResult result) {
+    public int calculateDriverPoints(RaceResult result) {
         if (result.getDnf()) {
             return DNF_PENALTY;
         }
@@ -36,4 +38,10 @@ public class SprintScoringStrategy implements ScoringStrategy {
 
         return points;
     }
+
+    @Override
+    public int calculateTeamPoints(RaceResult resultDriver1, RaceResult resultDriver2) {
+        return calculateDriverPoints(resultDriver1) + calculateDriverPoints(resultDriver2);
+    }
+
 }

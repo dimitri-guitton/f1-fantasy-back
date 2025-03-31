@@ -1,4 +1,4 @@
-package com.dg.f1fantasyback.service.race_point_calculator;
+package com.dg.f1fantasyback.service.scoring;
 
 import com.dg.f1fantasyback.model.enums.RaceTypeEnum;
 

@@ -1,6 +1,9 @@
 package com.dg.f1fantasyback.service;
 
+import com.dg.f1fantasyback.model.entity.Driver;
 import com.dg.f1fantasyback.model.entity.FantasyRacePoint;
+import com.dg.f1fantasyback.model.entity.Race;
+import com.dg.f1fantasyback.model.entity.Team;
 import com.dg.f1fantasyback.repository.FantasyRacePointRepository;
 import org.springframework.stereotype.Service;
 
@@ -83,5 +86,21 @@ public class FantasyRacePointService {
             leaderboard.add(map);
         }
         return leaderboard;
+    }
+
+    public FantasyRacePoint createDriverPoint(Race race, Driver driver, int points) {
+        FantasyRacePoint racePoint = FantasyRacePoint.builder().race(race).driver(driver).point(points).build();
+
+        fantasyRacePointRepository.save(racePoint);
+
+        return racePoint;
+    }
+
+    public FantasyRacePoint createTeamPoint(Race race, Team team, int points) {
+        FantasyRacePoint racePoint = FantasyRacePoint.builder().race(race).team(team).point(points).build();
+
+        fantasyRacePointRepository.save(racePoint);
+
+        return racePoint;
     }
 }
