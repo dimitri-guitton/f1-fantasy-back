@@ -1,5 +1,6 @@
 package com.dg.f1fantasyback.controller;
 
+import com.dg.f1fantasyback.exception.PointCalculatorException;
 import com.dg.f1fantasyback.model.entity.Race;
 import com.dg.f1fantasyback.repository.RaceRepository;
 import com.dg.f1fantasyback.service.race_point_calculator.RaceCalculator;
@@ -26,7 +27,7 @@ public class CalculatorController {
 
     @GetMapping("/{id}/race/calculate")
     public void calculateRacePoints(@PathVariable Integer id) {
-        Race race = raceRepository.findById(id).orElseThrow(() -> new RuntimeException("Invalid Race ID"));
+        Race race = raceRepository.findById(id).orElseThrow(() -> new PointCalculatorException("Invalid Race ID"));
 
         raceCalculator.calculateRacePoints(race);
     }

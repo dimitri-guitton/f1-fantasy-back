@@ -1,5 +1,6 @@
 package com.dg.f1fantasyback.service.race_point_calculator;
 
+import com.dg.f1fantasyback.exception.PointCalculatorException;
 import com.dg.f1fantasyback.model.entity.FantasyRacePoint;
 import com.dg.f1fantasyback.model.entity.Race;
 import com.dg.f1fantasyback.model.entity.RaceResult;
@@ -36,11 +37,11 @@ public class RaceCalculator {
 
     public void calculateRacePoints(Race race) {
         if (race.getIsCalculated()) {
-            throw new RuntimeException("This race has already been calculated");
+            throw new PointCalculatorException("This race has already been calculated");
         }
 
         if (race.getType() != RaceTypeEnum.GP && race.getType() != RaceTypeEnum.QUALIFYING) {
-            throw new RuntimeException("This race type is not supported");
+            throw new PointCalculatorException("This race type is not supported");
         }
 
         Optional<Race> qualifyingRace;
@@ -50,7 +51,7 @@ public class RaceCalculator {
                                                                                                    .getId());
 
             if (qualifyingRace.isEmpty() || !qualifyingRace.get().getIsCalculated()) {
-                throw new RuntimeException("The race need to calculate qualifying race before");
+                throw new PointCalculatorException("The race need to calculate qualifying race before");
             }
 
             List<Object[]> positions = raceResultRepository.getPositionsByDriver(qualifyingRace.get().getId());
