@@ -22,6 +22,4 @@ public class FantasyTeamDetailDto implements Serializable {
     private Long id;
     private UserDetailDto user;
     private String label;
-    private Set<DriverDto> drivers = new LinkedHashSet<>();
-    private Set<ConstructorDto> teams = new LinkedHashSet<>();
 }

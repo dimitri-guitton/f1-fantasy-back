@@ -41,5 +41,4 @@ public class FantasyTeamComposition {
             joinColumns = @JoinColumn(name = "fantasy_team_composition_id"),
             inverseJoinColumns = @JoinColumn(name = "driver_id"))
     private Set<Driver> drivers = new LinkedHashSet<>();
-
 }

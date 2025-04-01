@@ -23,8 +23,4 @@ public class FantasyTeamCreateDto implements Serializable {
     @NotBlank(message = "Le label de l'équipe est obligatoire")
     @Size(min = 3, max = 50, message = "Le label de l'équipe doit contenir entre 3 et 50 caractères")
     private String label;
-
-    private Set<Integer> driverIds = new LinkedHashSet<>();
-
-    private Set<Integer> teamIds = new LinkedHashSet<>();
 }

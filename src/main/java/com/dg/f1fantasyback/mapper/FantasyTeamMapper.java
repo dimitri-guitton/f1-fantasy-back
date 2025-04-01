@@ -4,6 +4,7 @@ import com.dg.f1fantasyback.model.dto.fantasy_team.FantasyTeamCreateDto;
 import com.dg.f1fantasyback.model.dto.fantasy_team.FantasyTeamDetailDto;
 import com.dg.f1fantasyback.model.dto.fantasy_team.FantasyTeamDto;
 import com.dg.f1fantasyback.model.entity.fantasy.FantasyTeam;
+import com.dg.f1fantasyback.repository.FantasyTeamRepository;
 import org.mapstruct.*;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
@@ -22,4 +23,14 @@ public interface FantasyTeamMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     FantasyTeam partialUpdate(FantasyTeamCreateDto fantasyTeamCreateDto, @MappingTarget FantasyTeam fantasyTeam);
+
+    @Named("mapFantasyTeamId")
+    default FantasyTeam mapFantasyTeamId(Long id, @Context FantasyTeamRepository fantasyTeamRepository) {
+        if (id == null) {
+            return null;
+        }
+        return fantasyTeamRepository.findById(id)
+                                    .orElseThrow(() -> new IllegalArgumentException("GrandPrix not found with id " + id));
+    }
+
 }

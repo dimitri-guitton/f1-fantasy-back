@@ -1,0 +1,20 @@
+meta {
+  name: Update Composition
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{host}}/fantasy-teams/update-composition
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "grandPrixId":1,
+    "fantasyTeamId":1,
+    "driverIds": [10,11,12,13,14],
+    "constructorIds": [7,6]
+  }
+}

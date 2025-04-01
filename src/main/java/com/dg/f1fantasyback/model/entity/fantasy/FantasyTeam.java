@@ -28,16 +28,4 @@ public class FantasyTeam {
 
     @Column(name = "label", nullable = false)
     private String label;
-
-    @ManyToMany
-    @JoinTable(name = "fantasy_team_drivers",
-            joinColumns = @JoinColumn(name = "fantasy_team_id"),
-            inverseJoinColumns = @JoinColumn(name = "driver_id"))
-    private Set<Driver> drivers = new LinkedHashSet<>();
-
-    @ManyToMany
-    @JoinTable(name = "fantasy_team_constructors",
-            joinColumns = @JoinColumn(name = "fantasy_team_id"),
-            inverseJoinColumns = @JoinColumn(name = "constructor_id"))
-    private Set<Constructor> constructors = new LinkedHashSet<>();
 }
