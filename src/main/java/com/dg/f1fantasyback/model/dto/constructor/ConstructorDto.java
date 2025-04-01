@@ -14,6 +14,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ConstructorDto implements Serializable {
-    private String label;
+    private String name;
     private String logo;
 }

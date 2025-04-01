@@ -6,9 +6,6 @@ import com.dg.f1fantasyback.model.dto.fantasy_team.FantasyTeamDetailDto;
 import com.dg.f1fantasyback.model.dto.fantasy_team.FantasyTeamDto;
 import com.dg.f1fantasyback.model.entity.AppUser;
 import com.dg.f1fantasyback.model.entity.fantasy.FantasyTeam;
-import com.dg.f1fantasyback.repository.ConstructorRepository;
-import com.dg.f1fantasyback.repository.DriverRepository;
-import com.dg.f1fantasyback.repository.FantasyRacePointRepository;
 import com.dg.f1fantasyback.repository.FantasyTeamRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,16 +16,10 @@ public class FantasyTeamService {
 
     private final FantasyTeamRepository fantasyTeamRepository;
     private final FantasyTeamMapper fantasyTeamMapper;
-    private final DriverRepository driverRepository;
-    private final ConstructorRepository constructorRepository;
-    private final FantasyRacePointRepository fantasyRacePointRepository;
 
-    public FantasyTeamService(FantasyTeamRepository fantasyTeamRepository, FantasyTeamMapper fantasyTeamMapper, DriverRepository driverRepository, ConstructorRepository constructorRepository, FantasyRacePointRepository fantasyRacePointRepository) {
+    public FantasyTeamService(FantasyTeamRepository fantasyTeamRepository, FantasyTeamMapper fantasyTeamMapper) {
         this.fantasyTeamRepository = fantasyTeamRepository;
         this.fantasyTeamMapper = fantasyTeamMapper;
-        this.driverRepository = driverRepository;
-        this.constructorRepository = constructorRepository;
-        this.fantasyRacePointRepository = fantasyRacePointRepository;
     }
 
     public Iterable<FantasyTeamDto> getTeams() {
