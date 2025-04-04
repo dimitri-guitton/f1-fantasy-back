@@ -1,5 +1,6 @@
 package com.dg.f1fantasyback.service;
 
+import com.dg.f1fantasyback.mapper.FantasyTeamCompositionMapper;
 import com.dg.f1fantasyback.mapper.FantasyTeamMapper;
 import com.dg.f1fantasyback.model.dto.fantasy_team.FantasyTeamCreateDto;
 import com.dg.f1fantasyback.model.dto.fantasy_team.FantasyTeamDetailDto;
@@ -7,8 +8,10 @@ import com.dg.f1fantasyback.model.dto.fantasy_team.FantasyTeamDto;
 import com.dg.f1fantasyback.model.entity.AppUser;
 import com.dg.f1fantasyback.model.entity.fantasy.FantasyTeam;
 import com.dg.f1fantasyback.repository.FantasyTeamRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -16,10 +19,12 @@ public class FantasyTeamService {
 
     private final FantasyTeamRepository fantasyTeamRepository;
     private final FantasyTeamMapper fantasyTeamMapper;
+    private final FantasyTeamCompositionMapper compositionMapper;
 
-    public FantasyTeamService(FantasyTeamRepository fantasyTeamRepository, FantasyTeamMapper fantasyTeamMapper) {
+    public FantasyTeamService(FantasyTeamRepository fantasyTeamRepository, FantasyTeamMapper fantasyTeamMapper, @Qualifier("fantasyTeamCompositionMapperImpl") FantasyTeamCompositionMapper compositionMapper) {
         this.fantasyTeamRepository = fantasyTeamRepository;
         this.fantasyTeamMapper = fantasyTeamMapper;
+        this.compositionMapper = compositionMapper;
     }
 
     public Iterable<FantasyTeamDto> getTeams() {
@@ -27,20 +32,20 @@ public class FantasyTeamService {
     }
 
     public FantasyTeamDetailDto getTeamById(Long id) {
-        return fantasyTeamMapper.toDetailDto(fantasyTeamRepository.findById(id).orElseThrow());
+        return fantasyTeamMapper.toDetailDto(fantasyTeamRepository.findById(id).orElseThrow(), compositionMapper);
     }
 
     public FantasyTeamDetailDto createTeam(AppUser appUser, FantasyTeamCreateDto fantasyTeamCreateDto) {
         FantasyTeam fantasyTeam = fantasyTeamMapper.toEntity(fantasyTeamCreateDto);
         fantasyTeam.setUser(appUser);
 
-        return fantasyTeamMapper.toDetailDto(fantasyTeamRepository.save(fantasyTeam));
+        return fantasyTeamMapper.toDetailDto(fantasyTeamRepository.save(fantasyTeam), compositionMapper);
     }
 
     public FantasyTeamDetailDto updateTeam(Long id, FantasyTeamCreateDto fantasyTeamCreateDto) {
         FantasyTeam fantasyTeam = fantasyTeamRepository.findById(id).orElseThrow();
 
-        return fantasyTeamMapper.toDetailDto(fantasyTeamRepository.save(fantasyTeamMapper.partialUpdate(fantasyTeamCreateDto, fantasyTeam)));
+        return fantasyTeamMapper.toDetailDto(fantasyTeamRepository.save(fantasyTeamMapper.partialUpdate(fantasyTeamCreateDto, fantasyTeam)), compositionMapper);
     }
 
     public void deleteTeam(Long id) {
@@ -48,33 +53,13 @@ public class FantasyTeamService {
     }
 
     public Integer getFantasyTeamPointsOnRace(Long teamId, Integer raceId) {
-        throw new RuntimeException("This method is outdated");
-//        Optional<FantasyTeam> optUserTeam = fantasyTeamRepository.findById(teamId);
-//        if (optUserTeam.isEmpty()) {
-//            throw new IllegalArgumentException("Invalid team id");
-//        }
-//
-//        FantasyTeam fantasyTeam = optUserTeam.get();
-//
-//        Set<Driver> drivers = fantasyTeam.getDrivers();
-//        Set<Constructor> constructors = fantasyTeam.getConstructors();
-//        if (drivers.size() > 5) {
-//            throw new IllegalArgumentException("Too many drivers");
-//        }
-//
-//        if (constructors.size() > 2) {
-//            throw new IllegalArgumentException("Too many teams");
-//        }
-//
-//        Integer teamId1 = constructors.stream().findFirst().orElseThrow().getId();
-//        Integer teamId2 = constructors.stream().skip(1).findFirst().orElseThrow().getId();
-//
-//        Integer driverId1 = drivers.stream().findFirst().orElseThrow().getId();
-//        Integer driverId2 = drivers.stream().skip(1).findFirst().orElseThrow().getId();
-//        Integer driverId3 = drivers.stream().skip(2).findFirst().orElseThrow().getId();
-//        Integer driverId4 = drivers.stream().skip(3).findFirst().orElseThrow().getId();
-//        Integer driverId5 = drivers.stream().skip(4).findFirst().orElseThrow().getId();
-//
-//        return fantasyRacePointRepository.getPointsOnRaceByUserTeam(raceId, teamId1, teamId2, driverId1, driverId2, driverId3, driverId4, driverId5);
+        return null;
+    }
+
+    public List<FantasyTeamDetailDto> getUserTeams(AppUser currentUser) {
+        return fantasyTeamRepository.findByUser_IdOrderByLabelAsc(currentUser.getId())
+                                    .stream()
+                                    .map(team -> fantasyTeamMapper.toDetailDto(team, compositionMapper))
+                                    .collect(Collectors.toList());
     }
 }

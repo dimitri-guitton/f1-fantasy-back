@@ -3,11 +3,15 @@ package com.dg.f1fantasyback.mapper;
 import com.dg.f1fantasyback.model.dto.fantasy_team.FantasyTeamCreateDto;
 import com.dg.f1fantasyback.model.dto.fantasy_team.FantasyTeamDetailDto;
 import com.dg.f1fantasyback.model.dto.fantasy_team.FantasyTeamDto;
+import com.dg.f1fantasyback.model.dto.fantasy_team_composition.FantasyTeamCompositionDto;
 import com.dg.f1fantasyback.model.entity.fantasy.FantasyTeam;
+import com.dg.f1fantasyback.model.entity.fantasy.FantasyTeamComposition;
 import com.dg.f1fantasyback.repository.FantasyTeamRepository;
 import org.mapstruct.*;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
+import java.util.Set;
+
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING, uses = {FantasyTeamCompositionMapper.class})
 public interface FantasyTeamMapper {
     FantasyTeam toEntity(FantasyTeamDto fantasyTeamDto);
 
@@ -17,7 +21,8 @@ public interface FantasyTeamMapper {
 
     FantasyTeamDto toDto(FantasyTeam fantasyTeam);
 
-    FantasyTeamDetailDto toDetailDto(FantasyTeam fantasyTeam);
+    @Mapping(source = "fantasyTeamCompositions", target = "composition", qualifiedByName = "mapLastComposition")
+    FantasyTeamDetailDto toDetailDto(FantasyTeam fantasyTeam, @Context FantasyTeamCompositionMapper compositionMapper);
 
     FantasyTeamCreateDto toCreateDto(FantasyTeam fantasyTeam);
 
@@ -33,4 +38,18 @@ public interface FantasyTeamMapper {
                                     .orElseThrow(() -> new IllegalArgumentException("GrandPrix not found with id " + id));
     }
 
+
+    @Named("mapLastComposition")
+    default FantasyTeamCompositionDto mapLastComposition(Set<FantasyTeamComposition> compositions, @Context FantasyTeamCompositionMapper compositionMapper) {
+        if (compositions == null || compositions.isEmpty()) {
+            return null;
+        }
+
+        FantasyTeamComposition last = compositions.stream()
+                                                  .reduce((first, second) -> second)
+                                                  .orElse(null)
+                ;
+
+        return compositionMapper.toDto(last);
+    }
 }

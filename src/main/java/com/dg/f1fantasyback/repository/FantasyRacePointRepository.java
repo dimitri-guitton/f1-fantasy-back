@@ -16,7 +16,7 @@ public interface FantasyRacePointRepository extends JpaRepository<FantasyScore, 
 
     List<FantasyScore> findByDriver_Id(Integer driverId);
 
-    @Query("SELECT frp.driver.id,frp.driver.lastName, SUM(frp.points) as point FROM FantasyScore frp WHERE frp.driver.id IS NOT NULL GROUP BY frp.driver.id, frp.driver.lastName ORDER BY point DESC")
+    @Query("SELECT frp.driver.id, frp.driver.lastName, SUM(frp.points) as point FROM FantasyScore frp WHERE frp.driver.id IS NOT NULL GROUP BY frp.driver.id, frp.driver.lastName ORDER BY point DESC")
     List<Object[]> findDriverLeaderboard();
 
     @Query("SELECT frp.constructor.id,frp.constructor.name, SUM(frp.points) as point FROM FantasyScore frp WHERE frp.constructor.id IS NOT NULL GROUP BY frp.constructor.id, frp.constructor.name ORDER BY point DESC")

@@ -8,6 +8,7 @@ import com.dg.f1fantasyback.repository.FantasyRacePointRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class FantasyScoreService {
@@ -76,16 +77,15 @@ public class FantasyScoreService {
 
     public List<Map<String, String>> getDriverLeaderboard() {
         List<Object[]> result = fantasyRacePointRepository.findDriverLeaderboard();
-        List<Map<String, String>> leaderboard = new ArrayList<>();
 
-        for (Object[] row : result) {
-            Map<String, String> map = new HashMap<>();
-            map.put("drvier_id", String.valueOf(row[0]));
-            map.put("name", String.valueOf(row[1]));
-            map.put("point", String.valueOf(row[2]));
-            leaderboard.add(map);
-        }
-        return leaderboard;
+        return result.stream()
+                     .map(r -> Map.ofEntries(
+                             Map.entry("drvier_id", String.valueOf(r[0])),
+                             Map.entry("name", String.valueOf(r[1])),
+                             Map.entry("points", String.valueOf(r[2]))
+                                            ))
+                     .sorted(Comparator.comparingInt(i -> -Integer.parseInt(i.get("points"))))
+                     .collect(Collectors.toList());
     }
 
     public void createDriverPoint(Event event, Driver driver, int points) {

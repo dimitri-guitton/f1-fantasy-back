@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/medias")
 public class FileController {
     private final FileStorageService fileStorageService;
 

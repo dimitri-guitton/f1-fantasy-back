@@ -9,12 +9,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService {
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
 
-    public AuthService(UserRepository userRepository,
-                       UserMapper userMapper) {
+    public AuthService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.userMapper = userMapper;
     }
 
     public AppUser getAuthenticatedUser() {

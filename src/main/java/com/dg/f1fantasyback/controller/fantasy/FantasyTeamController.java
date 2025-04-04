@@ -3,9 +3,13 @@ package com.dg.f1fantasyback.controller.fantasy;
 import com.dg.f1fantasyback.model.dto.fantasy_team.FantasyTeamCreateDto;
 import com.dg.f1fantasyback.model.dto.fantasy_team.FantasyTeamDetailDto;
 import com.dg.f1fantasyback.model.dto.fantasy_team.FantasyTeamDto;
+import com.dg.f1fantasyback.model.entity.AppUser;
 import com.dg.f1fantasyback.security.AuthService;
 import com.dg.f1fantasyback.service.FantasyTeamService;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/fantasy-teams")
@@ -23,6 +27,12 @@ public class FantasyTeamController {
         return fantasyTeamService.getTeams();
     }
 
+    @GetMapping("/my")
+    public List<FantasyTeamDetailDto> getUserTeams(){
+        AppUser currentUser = authService.getAuthenticatedUser();
+        return fantasyTeamService.getUserTeams(currentUser);
+    }
+
     @GetMapping("/{id}")
     public FantasyTeamDetailDto getFantasyTeamById(@PathVariable Long id) {
         return fantasyTeamService.getTeamById(id);
@@ -32,7 +42,6 @@ public class FantasyTeamController {
     public Object getFantasyTeamPointsOnRace(@PathVariable Long id, @PathVariable Integer eventId) {
         return fantasyTeamService.getFantasyTeamPointsOnRace(id, eventId);
     }
-
 
     @PostMapping
     public FantasyTeamDetailDto createFantasyTeam(@RequestBody FantasyTeamCreateDto fantasyTeamCreateDto) {

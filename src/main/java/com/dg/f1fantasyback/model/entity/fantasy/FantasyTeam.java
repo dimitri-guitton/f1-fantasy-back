@@ -1,8 +1,6 @@
 package com.dg.f1fantasyback.model.entity.fantasy;
 
 import com.dg.f1fantasyback.model.entity.AppUser;
-import com.dg.f1fantasyback.model.entity.racing.Constructor;
-import com.dg.f1fantasyback.model.entity.racing.Driver;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,4 +26,7 @@ public class FantasyTeam {
 
     @Column(name = "label", nullable = false)
     private String label;
+
+    @OneToMany(mappedBy = "fantasyTeam", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<FantasyTeamComposition> fantasyTeamCompositions = new LinkedHashSet<>();
 }
