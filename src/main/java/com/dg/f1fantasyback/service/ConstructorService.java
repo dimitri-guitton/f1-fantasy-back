@@ -1,10 +1,12 @@
 package com.dg.f1fantasyback.service;
 
 import com.dg.f1fantasyback.mapper.ConstructorMapper;
+import com.dg.f1fantasyback.model.dto.constructor.ConstructorDetailDto;
 import com.dg.f1fantasyback.model.dto.constructor.ConstructorDto;
 import com.dg.f1fantasyback.repository.ConstructorRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,6 +23,14 @@ public class ConstructorService {
 
     public Iterable<ConstructorDto> getConstructors() {
         return constructorRepository.findAll().stream().map(constructorMapper::toDto).collect(Collectors.toList());
+    }
+
+    public Iterable<ConstructorDetailDto> getConstructorsWithPrices() {
+        return constructorRepository.findAll()
+                                    .stream()
+                                    .map(constructorMapper::toDetailDto)
+                                    .sorted(Comparator.comparing(ConstructorDetailDto::getMarketValue).reversed())
+                                    .collect(Collectors.toList());
     }
 
     public ConstructorDto getConstructorById(Integer id) {

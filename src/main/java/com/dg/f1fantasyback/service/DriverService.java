@@ -1,10 +1,13 @@
 package com.dg.f1fantasyback.service;
 
 import com.dg.f1fantasyback.mapper.DriverMapper;
+import com.dg.f1fantasyback.model.dto.constructor.ConstructorDetailDto;
+import com.dg.f1fantasyback.model.dto.driver.DriverDetailDto;
 import com.dg.f1fantasyback.model.dto.driver.DriverDto;
 import com.dg.f1fantasyback.repository.DriverRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,7 +26,18 @@ public class DriverService {
         return driverRepository.findAll().stream().map(driverMapper::toDto).collect(Collectors.toList());
     }
 
+    public Iterable<DriverDetailDto> getDriversWithPrices() {
+        return driverRepository.findAll()
+                               .stream()
+                               .map(driverMapper::toDetailDto)
+                               .sorted(Comparator.comparing(DriverDetailDto::getMarketValue).reversed())
+                               .collect(Collectors.toList());
+
+    }
+
     public DriverDto getDriverById(Integer id) {
         return driverMapper.toDto(driverRepository.findById(id).orElseThrow());
     }
+
+
 }

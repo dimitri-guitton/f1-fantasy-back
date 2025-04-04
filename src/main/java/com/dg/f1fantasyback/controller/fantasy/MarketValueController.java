@@ -32,6 +32,11 @@ public class MarketValueController {
         return marketValueService.getMarketValuesForConstructor(constructorId);
     }
 
+    @GetMapping("/constructors/current")
+    public Iterable<MarketValueDto> getMarketValuesForConstructor() {
+        return marketValueService.getMarketValuesForConstructors();
+    }
+
     @GetMapping("/constructors/{constructorId}/current")
     public MarketValueDto getCurrentValueForContructor(@PathVariable Integer constructorId) {
         return marketValueService.getCurrentValueForContructor(constructorId);
@@ -40,6 +45,11 @@ public class MarketValueController {
     @GetMapping("/drivers/{driverId}")
     public Iterable<MarketValueDto> getMarketValueForDriver(@PathVariable Integer driverId) {
         return marketValueService.getMarketValueForDriver(driverId);
+    }
+
+    @GetMapping("/drivers/current")
+    public Iterable<MarketValueDto> getMarketValuesForDrivers() {
+        return marketValueService.getMarketValuesForDrivers();
     }
 
     @GetMapping("/drivers/{driverId}/current")

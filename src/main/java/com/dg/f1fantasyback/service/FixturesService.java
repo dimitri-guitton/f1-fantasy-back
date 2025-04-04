@@ -2,6 +2,7 @@ package com.dg.f1fantasyback.service;
 
 import com.dg.f1fantasyback.exception.PointCalculatorException;
 import com.dg.f1fantasyback.model.entity.AppUser;
+import com.dg.f1fantasyback.model.entity.fantasy.MarketValue;
 import com.dg.f1fantasyback.model.entity.racing.*;
 import com.dg.f1fantasyback.model.enums.EventType;
 import com.dg.f1fantasyback.model.enums.Role;
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,8 +39,9 @@ public class FixturesService {
     private final EventResultRepository eventResultRepository;
     private final FantasyRacePointRepository fantasyRacePointRepository;
     private final ConstructorRepository constructorRepository;
+    private final MarketValueRepository marketValueRepository;
 
-    public FixturesService(BCryptPasswordEncoder passwordEncoder, UserRepository userRepository, DriverRepository driverRepository, GrandPrixRepository grandPrixRepository, EventRepository eventRepository, EventResultRepository eventResultRepository, FantasyRacePointRepository fantasyRacePointRepository, ConstructorRepository constructorRepository) {
+    public FixturesService(BCryptPasswordEncoder passwordEncoder, UserRepository userRepository, DriverRepository driverRepository, GrandPrixRepository grandPrixRepository, EventRepository eventRepository, EventResultRepository eventResultRepository, FantasyRacePointRepository fantasyRacePointRepository, ConstructorRepository constructorRepository, MarketValueRepository marketValueRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.driverRepository = driverRepository;
@@ -47,13 +50,16 @@ public class FixturesService {
         this.eventResultRepository = eventResultRepository;
         this.fantasyRacePointRepository = fantasyRacePointRepository;
         this.constructorRepository = constructorRepository;
+        this.marketValueRepository = marketValueRepository;
     }
 
+    @Transactional
     public void load() throws IOException {
         loadUsers();
         loadTeams();
         loadGrandPrixFixtures();
         loadRaceResult();
+        loadMarketValues();
     }
 
     public void reloadRaceResults() {
@@ -262,6 +268,40 @@ public class FixturesService {
         });
 
         eventResultRepository.saveAll(eventResults);
+    }
+
+    private void loadMarketValues() {
+        if (marketValueRepository.count() > 0) {
+            return;
+        }
+
+        List<Driver> drivers = driverRepository.findAll();
+        drivers.forEach(driver -> {
+            MarketValue value = MarketValue.builder().driver(driver).value(new Random().nextLong(1000, 50001)).build();
+            MarketValue value2 = MarketValue.builder().driver(driver).value(new Random().nextLong(1000, 50001)).build();
+
+            marketValueRepository.saveAndFlush(value);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            marketValueRepository.saveAndFlush(value2);
+        });
+
+        List<Constructor> constructors = constructorRepository.findAll();
+        constructors.forEach(constructor -> {
+            MarketValue value = MarketValue.builder().constructor(constructor).value(new Random().nextLong(1000, 50001)).build();
+            MarketValue value2 = MarketValue.builder().constructor(constructor).value(new Random().nextLong(1000, 50001)).build();
+
+            marketValueRepository.saveAndFlush(value);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            marketValueRepository.saveAndFlush(value2);
+        });
     }
 
     private void downloadImage(String imageUrl, String fileName) {

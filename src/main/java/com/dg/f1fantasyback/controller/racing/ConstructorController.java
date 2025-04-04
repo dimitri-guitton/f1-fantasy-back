@@ -1,5 +1,6 @@
 package com.dg.f1fantasyback.controller.racing;
 
+import com.dg.f1fantasyback.model.dto.constructor.ConstructorDetailDto;
 import com.dg.f1fantasyback.model.dto.constructor.ConstructorDto;
 import com.dg.f1fantasyback.service.ConstructorService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +18,14 @@ public class ConstructorController {
     }
 
     @GetMapping
-    public Iterable<ConstructorDto> getConstructorS() {
+    public Iterable<ConstructorDto> getConstructors() {
         return constructorService.getConstructors();
+    }
+
+
+    @GetMapping("/with-prices")
+    public Iterable<ConstructorDetailDto> getConstructorsWithPrices() {
+        return constructorService.getConstructorsWithPrices();
     }
 
     @GetMapping("/{id}")

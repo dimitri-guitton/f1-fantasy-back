@@ -1,5 +1,6 @@
 package com.dg.f1fantasyback.controller.racing;
 
+import com.dg.f1fantasyback.model.dto.driver.DriverDetailDto;
 import com.dg.f1fantasyback.model.dto.driver.DriverDto;
 import com.dg.f1fantasyback.service.DriverService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,11 @@ public class DriverController {
     @GetMapping
     public Iterable<DriverDto> getDrivers() {
         return driverService.getDrivers();
+    }
+
+    @GetMapping("/with-prices")
+    public Iterable<DriverDetailDto> getDriversWithPrices() {
+        return driverService.getDriversWithPrices();
     }
 
     @GetMapping("/{id}")

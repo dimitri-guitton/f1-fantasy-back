@@ -21,5 +21,5 @@ public class MarketValueCreateDto implements Serializable {
 
     @NotNull
     @PositiveOrZero
-    private Long price;
+    private Long value;
 }

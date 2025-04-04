@@ -11,6 +11,7 @@ import com.dg.f1fantasyback.repository.DriverRepository;
 import com.dg.f1fantasyback.repository.MarketValueRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -43,12 +44,20 @@ public class MarketValueService {
         return marketValueRepository.findAllByConstructor_Id(teamId).stream().map(marketValueMapper::toDto).collect(Collectors.toList());
     }
 
+    public List<MarketValueDto> getMarketValuesForConstructors() {
+        return marketValueRepository.findLatestMarketValuesForConstructors().stream().map(marketValueMapper::toDto).collect(Collectors.toList());
+    }
+
     public MarketValueDto getCurrentValueForContructor(Integer teamId) {
         return marketValueRepository.findFirstByConstructor_IdOrderByCreatedAtDesc(teamId).map(marketValueMapper::toDto).orElse(null);
     }
 
     public Iterable<MarketValueDto> getMarketValueForDriver(Integer userId) {
         return marketValueRepository.findAllByDriver_Id((userId)).stream().map(marketValueMapper::toDto).collect(Collectors.toList());
+    }
+
+    public List<MarketValueDto> getMarketValuesForDrivers() {
+        return marketValueRepository.findLatestMarketValuesForDrivers().stream().map(marketValueMapper::toDto).collect(Collectors.toList());
     }
 
     public MarketValueDto getCurrentValueForDriver(Integer driverId) {

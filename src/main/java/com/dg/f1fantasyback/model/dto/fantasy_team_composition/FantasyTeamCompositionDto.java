@@ -1,8 +1,8 @@
 package com.dg.f1fantasyback.model.dto.fantasy_team_composition;
 
-import com.dg.f1fantasyback.model.dto.constructor.ConstructorDto;
-import com.dg.f1fantasyback.model.dto.driver.DriverDto;
 import com.dg.f1fantasyback.model.entity.fantasy.FantasyTeamComposition;
+import com.dg.f1fantasyback.model.dto.constructor.ConstructorDetailDto;
+import com.dg.f1fantasyback.model.dto.driver.DriverDetailDto;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,7 +20,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class FantasyTeamCompositionDto implements Serializable {
     @NotNull
-    private Set<ConstructorDto> constructors = new LinkedHashSet<>();
+    private Set<ConstructorDetailDto> constructors = new LinkedHashSet<>();
     @NotNull
-    private Set<DriverDto> drivers = new LinkedHashSet<>();
+    private Set<DriverDetailDto> drivers = new LinkedHashSet<>();
 }
