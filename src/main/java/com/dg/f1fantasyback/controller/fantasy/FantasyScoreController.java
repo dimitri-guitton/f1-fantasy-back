@@ -49,8 +49,8 @@ public class FantasyScoreController {
     }
 
     @GetMapping("/events/{eventId}")
-    public FantasyScoreService.EventPoints getScoreOnRace(@PathVariable Integer eventId) {
-        return fantasyScoreService.getScoreOnRace(eventId);
+    public FantasyScoreService.EventPoints getScoreOnEvent(@PathVariable Integer eventId) {
+        return fantasyScoreService.getScoreOnEvent(eventId);
     }
 
     @GetMapping("/gp/{gpId}")

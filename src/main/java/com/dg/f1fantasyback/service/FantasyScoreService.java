@@ -19,10 +19,10 @@ public class FantasyScoreService {
 
     }
 
-    public record DriverPoint(Integer driverId, String driverName, Integer points) {
+    public record DriverPoint(Integer driverId, String driverName, Integer value) {
     }
 
-    public record ConstructorPoint(Integer constructorId, String constructorName, Integer points) {
+    public record ConstructorPoint(Integer constructorId, String constructorName, Integer value) {
     }
 
     private final FantasyRacePointRepository fantasyRacePointRepository;
@@ -96,9 +96,9 @@ public class FantasyScoreService {
                      .map(r -> Map.ofEntries(
                              Map.entry("drvier_id", String.valueOf(r[0])),
                              Map.entry("name", String.valueOf(r[1])),
-                             Map.entry("points", String.valueOf(r[2]))
+                             Map.entry("value", String.valueOf(r[2]))
                                             ))
-                     .sorted(Comparator.comparingInt(i -> -Integer.parseInt(i.get("points"))))
+                     .sorted(Comparator.comparingInt(i -> -Integer.parseInt(i.get("value"))))
                      .collect(Collectors.toList());
     }
 
@@ -118,7 +118,7 @@ public class FantasyScoreService {
         return null;
     }
 
-    public EventPoints getScoreOnRace(Integer eventId) {
+    public EventPoints getScoreOnEvent(Integer eventId) {
         List<FantasyScore> fantasyScores = fantasyRacePointRepository.findByEvent_Id(eventId);
 
         List<DriverPoint> driverPoints = new ArrayList<>();
@@ -140,6 +140,8 @@ public class FantasyScoreService {
             }
         }
 
+        driverPoints.sort(Comparator.comparing(DriverPoint::value).reversed());
+        constructorPoints.sort(Comparator.comparing(ConstructorPoint::value).reversed());
 
         return new EventPoints(driverPoints, constructorPoints);
     }
@@ -154,38 +156,29 @@ public class FantasyScoreService {
         GrandPrix grandPrix = optGrandPrix.get();
 
         Set<Event> events = grandPrix.getEvents();
-        List<DriverPoint> driverPoints = new ArrayList<>();
-        List<ConstructorPoint> constructorPoints = new ArrayList<>();
+        Map<Integer, DriverPoint> driverPoints = new HashMap<>();
+        Map<Integer, ConstructorPoint> constructorPoints = new HashMap<>();
 
         for (Event event : events) {
-            EventPoints eventPoints = getScoreOnRace(event.getId());
+            EventPoints eventPoints = getScoreOnEvent(event.getId());
             for (DriverPoint points : eventPoints.driverPoints) {
-                Optional<DriverPoint> r = driverPoints.stream().filter(p -> Objects.equals(p.driverId, points.driverId)).findAny();
-
-                if (r.isPresent()) {
-                    Integer sum = points.points + r.get().points;
-                    DriverPoint newPoint = new DriverPoint(points.driverId, points.driverName(), sum);
-                    driverPoints.remove(r.get());
-                    driverPoints.add(newPoint);
-                } else {
-                    driverPoints.add(points);
-                }
+                driverPoints.computeIfPresent(points.driverId, (k, v) -> new DriverPoint(k, v.driverName, v.value + points.value));
+                driverPoints.putIfAbsent(points.driverId, points);
             }
 
             for (ConstructorPoint points : eventPoints.constructorPoints) {
-                Optional<ConstructorPoint> r = constructorPoints.stream().filter(p -> Objects.equals(p.constructorId, points.constructorId)).findAny();
-
-                if (r.isPresent()) {
-                    Integer sum = points.points + r.get().points;
-                    ConstructorPoint newPoint = new ConstructorPoint(points.constructorId, points.constructorName, sum);
-                    constructorPoints.remove(r.get());
-                    constructorPoints.add(newPoint);
-                } else {
-                    constructorPoints.add(points);
-                }
+                constructorPoints.computeIfPresent(points.constructorId, (k, v) -> new ConstructorPoint(k, v.constructorName, v.value + points.value));
+                constructorPoints.putIfAbsent(points.constructorId, points);
             }
         }
 
-        return new EventPoints(driverPoints, constructorPoints);
+        List<DriverPoint> driverPointList = driverPoints.values().stream().sorted(Comparator.comparing(DriverPoint::value).reversed()).toList();
+        List<ConstructorPoint> constructorPointsList = constructorPoints.values()
+                                                                        .stream()
+                                                                        .sorted(Comparator.comparing(ConstructorPoint::value).reversed())
+                                                                        .toList()
+                ;
+
+        return new EventPoints(driverPointList, constructorPointsList);
     }
 }
