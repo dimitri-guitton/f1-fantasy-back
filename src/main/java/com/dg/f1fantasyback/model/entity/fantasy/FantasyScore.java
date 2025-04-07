@@ -33,5 +33,4 @@ public class FantasyScore {
 
     @Column(name = "points", nullable = false)
     private Integer points;
-
 }

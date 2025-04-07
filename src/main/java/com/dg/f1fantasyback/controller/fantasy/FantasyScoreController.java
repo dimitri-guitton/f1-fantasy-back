@@ -47,4 +47,19 @@ public class FantasyScoreController {
     public List<Map<String, String>> getDriverLeaderboard() {
         return fantasyScoreService.getDriverLeaderboard();
     }
+
+    @GetMapping("/events/{eventId}")
+    public FantasyScoreService.EventPoints getScoreOnRace(@PathVariable Integer eventId) {
+        return fantasyScoreService.getScoreOnRace(eventId);
+    }
+
+    @GetMapping("/gp/{gpId}")
+    public FantasyScoreService.EventPoints getScoreOnGp(@PathVariable Integer gpId) {
+        return fantasyScoreService.getScoreOnGp(gpId);
+    }
+
+    @GetMapping("/events/{eventId}/team/{teamId}")
+    public Map<String, Object> getTeamScoreOnRace(@PathVariable Integer eventId, @PathVariable Integer teamId) {
+        return fantasyScoreService.getTeamScoreOnRace(teamId, eventId);
+    }
 }

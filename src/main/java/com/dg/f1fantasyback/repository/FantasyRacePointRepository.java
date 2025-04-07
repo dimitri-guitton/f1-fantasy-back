@@ -24,4 +24,6 @@ public interface FantasyRacePointRepository extends JpaRepository<FantasyScore, 
 
     @Query("SELECT sum(frp.points) as points FROM FantasyScore frp WHERE frp.event.id = :raceId AND (frp.constructor.id = :teamId1 OR frp.constructor.id = :teamId2 OR frp.driver.id = :driverId1 OR frp.driver.id = :driverId2 OR frp.driver.id = :driverId3 OR frp.driver.id = :driverId4 OR frp.driver.id = :driverId5)")
     Integer getPointsOnRaceByUserTeam(int raceId, int teamId1, int teamId2, int driverId1, int driverId2, int driverId3, int driverId4, int driverId5);
+
+    List<FantasyScore> findByEvent_Id(Integer eventId);
 }

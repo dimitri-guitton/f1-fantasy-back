@@ -36,4 +36,7 @@ public class Driver {
     @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MarketValue> marketValues = new LinkedHashSet<>();
 
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 }
