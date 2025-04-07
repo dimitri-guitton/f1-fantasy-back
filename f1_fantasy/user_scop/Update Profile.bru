@@ -1,0 +1,17 @@
+meta {
+  name: Update Profile
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{host}}/users/da2324e4-0bd2-4549-bc09-bbf5dc598554
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "username": "new-user-4"
+  }
+}

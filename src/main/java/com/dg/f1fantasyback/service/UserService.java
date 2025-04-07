@@ -6,6 +6,7 @@ import com.dg.f1fantasyback.model.dto.app_user.UserCreateDto;
 import com.dg.f1fantasyback.model.dto.app_user.UserDetailDto;
 import com.dg.f1fantasyback.model.dto.app_user.UserUpdateDto;
 import com.dg.f1fantasyback.model.entity.AppUser;
+import com.dg.f1fantasyback.model.enums.Role;
 import com.dg.f1fantasyback.repository.UserRepository;
 import com.dg.f1fantasyback.security.JWTService;
 import jakarta.validation.Valid;
@@ -60,6 +61,7 @@ public class UserService {
         AppUser appUser = userMapper.toEntity(userCreateDto);
         appUser.setPassword(passwordEncoder.encode(userCreateDto.getPassword())); // Hash du mot de passe
         appUser.setEnabled(true);
+        appUser.setRole(Role.ROLE_USER);
         return userMapper.toDetailDto(userRepository.save(appUser));
     }
 

@@ -1,5 +1,6 @@
 package com.dg.f1fantasyback.service;
 
+import com.dg.f1fantasyback.exception.LimitException;
 import com.dg.f1fantasyback.mapper.FantasyTeamCompositionMapper;
 import com.dg.f1fantasyback.mapper.FantasyTeamMapper;
 import com.dg.f1fantasyback.model.dto.fantasy_team.FantasyTeamCreateDto;
@@ -36,6 +37,13 @@ public class FantasyTeamService {
     }
 
     public FantasyTeamDetailDto createTeam(AppUser appUser, FantasyTeamCreateDto fantasyTeamCreateDto) {
+        int nbUserTeams = fantasyTeamRepository.countFantasyTeamByUser_Id(appUser.getId());
+
+        if (nbUserTeams >= 3) {
+            throw new LimitException("Vous avez atteint le nombre maximum d'équipes autorisées.");
+        }
+
+
         FantasyTeam fantasyTeam = fantasyTeamMapper.toEntity(fantasyTeamCreateDto);
         fantasyTeam.setUser(appUser);
 

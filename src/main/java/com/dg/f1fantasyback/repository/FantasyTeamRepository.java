@@ -8,4 +8,6 @@ import java.util.UUID;
 
 public interface FantasyTeamRepository extends JpaRepository<FantasyTeam, Long> {
     List<FantasyTeam> findByUser_IdOrderByLabelAsc(UUID userId);
+
+    int countFantasyTeamByUser_Id(UUID userId);
 }

@@ -36,7 +36,7 @@ public class FantasyTeamCompositionService {
             FantasyTeamComposition entity = optionalEntity.get();
             mapper.partialUpdate(dto, entity, constructorRepository, driverRepository);
 
-            if (entity.getDrivers().size() < 5 || entity.getConstructors().size() < 2) {
+            if (entity.getDrivers().size() != 5 || entity.getConstructors().size() != 2) {
                 throw new IllegalArgumentException("Il faut 5 pilotes différents et 2 écuries différentes");
             }
 

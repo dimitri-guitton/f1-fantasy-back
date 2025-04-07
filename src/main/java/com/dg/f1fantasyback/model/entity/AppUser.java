@@ -34,6 +34,7 @@ public class AppUser {
     private String password;
 
     @Enumerated(EnumType.STRING)
+    @ColumnDefault("ROLE_USER")
     private Role role = Role.ROLE_USER;
 
     @CreationTimestamp

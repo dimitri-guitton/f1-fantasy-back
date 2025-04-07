@@ -19,7 +19,7 @@ import java.io.Serializable;
 public class UserCreateDto implements Serializable {
     @NotNull(message = "Le nom d'utilisateur est obligatoire")
     @NotBlank(message = "Le nom d'utilisateur ne peut pas être vide")
-    @Size(min = 3, message = "Le nom d'utilisateurdoit contenir au moins 3 caractères")
+    @Size(min = 5, message = "Le nom d'utilisateur doit contenir au moins 3 caractères")
     private String username;
 
     @NotNull(message = "Le mot de passe est obligatoire")
